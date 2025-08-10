@@ -1,0 +1,410 @@
+/* ========================================
+   SUGGESTIONS - Sección de sugerencias y buzones
+   ======================================== */
+
+/* Sección de sugerencias */
+.suggestions-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 193, 7, 0.02));
+}
+
+.suggestions-section h2 {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.suggestions-subtitle {
+    text-align: center;
+    color: var(--accent-color);
+    opacity: 0.8;
+    margin-bottom: 3rem;
+}
+
+.mailboxes-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Buzones */
+.mailbox {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.mailbox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.mailbox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 8px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 0 0 8px 8px;
+    z-index: 1;
+}
+
+.mailbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.05));
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.mailbox-header h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.3rem;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.mailbox-icon {
+    font-size: 1.5rem;
+    animation: mailboxFloat 3s ease-in-out infinite;
+}
+
+.mailbox-content {
+    padding: 1.5rem;
+}
+
+/* Formulario de sugerencias */
+.suggestion-form {
+    margin-bottom: 2rem;
+}
+
+.suggestion-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.suggestion-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+.send-suggestion {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--accent-color);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.send-suggestion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.send-suggestion:hover::before {
+    left: 100%;
+}
+
+.send-suggestion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+/* Lista de sugerencias */
+.suggestions-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    background: rgba(255, 248, 220, 0.8);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary-color);
+    animation: letterSlideIn 0.5s ease;
+    position: relative;
+}
+
+.suggestion-item::before {
+    content: '💌';
+    position: absolute;
+    top: -5px;
+    right: 10px;
+    font-size: 1.2rem;
+    animation: letterStamp 0.3s ease 0.2s both;
+}
+
+.suggestion-sender {
+    color: var(--accent-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+    text-align: left;
+}
+
+.suggestion-text {
+    color: var(--accent-color);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.suggestion-date {
+    font-size: 0.7rem;
+    color: var(--accent-color);
+    opacity: 0.6;
+}
+
+.suggestion-actions {
+    margin-top: 0.5rem;
+}
+
+.reply-btn {
+    background: linear-gradient(135deg, var(--success-color), var(--success-hover));
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reply-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Respuestas */
+.replies-container {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.reply-form {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    animation: replyFormSlideIn 0.3s ease;
+}
+
+.reply-input-container {
+    margin-bottom: 1rem;
+}
+
+.reply-textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.8rem;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.reply-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.reply-char-counter {
+    text-align: right;
+    font-size: 0.7rem;
+    color: var(--accent-color);
+    opacity: 0.7;
+    margin-top: 0.3rem;
+}
+
+.reply-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.send-reply-btn,
+.cancel-reply-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-reply-btn {
+    background: linear-gradient(135deg, var(--success-color), var(--success-hover));
+    color: white;
+}
+
+.send-reply-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(76, 175, 80, 0.3);
+}
+
+.cancel-reply-btn {
+    background: linear-gradient(135deg, var(--danger-color), var(--danger-hover));
+    color: white;
+}
+
+.cancel-reply-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+}
+
+.reply-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    animation: replySlideIn 0.3s ease;
+}
+
+.reply-sender {
+    color: var(--accent-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.reply-text {
+    color: var(--accent-color);
+    line-height: 1.4;
+    margin-bottom: 0.3rem;
+}
+
+.reply-date {
+    font-size: 0.7rem;
+    color: var(--accent-color);
+    opacity: 0.6;
+}
+
+/* Animaciones de sugerencias */
+@keyframes mailboxFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes letterSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes letterStamp {
+    from {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes letterSend {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes replyFormSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes replySlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive sugerencias */
+@media (max-width: 768px) {
+    .mailboxes-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .suggestion-form textarea {
+        min-height: 80px;
+    }
+    
+    .reply-buttons {
+        flex-direction: column;
+    }
+    
+    .send-reply-btn,
+    .cancel-reply-btn {
+        width: 100%;
+    }
+} 

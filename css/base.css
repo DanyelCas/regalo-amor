@@ -1,0 +1,315 @@
+/* ========================================
+   BASE STYLES - Estilos base y variables
+   ======================================== */
+
+/* Variables CSS */
+:root {
+    --primary-color: #FFD700;
+    --secondary-color: #FFED4E;
+    --accent-color: #8B4513;
+    --background-gradient: linear-gradient(135deg, #FFF8DC, #FFEFD5);
+    --text-color: #8B4513;
+    --shadow-color: rgba(255, 215, 0, 0.3);
+    --success-color: #4CAF50;
+    --success-hover: #45a049;
+    --info-color: #2196F3;
+    --info-hover: #1976D2;
+    --danger-color: #FF6B6B;
+    --danger-hover: #FF5252;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--background-gradient);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background de girasoles con imágenes reales */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('../images/girasoles1.webp'),
+        url('../images/girasoles2.jpg');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    opacity: 0.4;
+    z-index: -1;
+    animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+/* Elementos dinámicos de flores */
+.floating-flower {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8;
+    animation: flowerFloat 8s ease-in-out infinite;
+}
+
+.floating-flower.sunflower {
+    background-image: url('../images/girasol_sin_fondo_1.png');
+}
+
+.floating-flower.tulip {
+    background-image: url('../images/tulipan1.webp');
+}
+
+.floating-flower.tulip2 {
+    background-image: url('../images/tulipan2.webp');
+}
+
+.floating-flower.tulip3 {
+    background-image: url('../images/tulipan3.png');
+}
+
+/* Flores laterales fijas - MÁS GRANDES */
+.side-flower {
+    position: fixed;
+    width: 180px;
+    height: 180px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.9;
+}
+
+.side-flower.left {
+    left: 20px;
+    animation: floatTulipSide 12s ease-in-out infinite;
+}
+
+.side-flower.right {
+    right: 20px;
+    transform: rotate(-15deg);
+    animation: floatTulipSideRight 12s ease-in-out infinite;
+}
+
+.side-flower.tulip-left {
+    background-image: url('../images/tulipan1.webp');
+}
+
+.side-flower.tulip-right {
+    background-image: url('../images/tulipan2.webp');
+}
+
+.side-flower.tulip-center {
+    background-image: url('../images/tulipan3.png');
+}
+
+/* Tipografía */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Dancing Script', cursive;
+    color: var(--accent-color);
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+/* Animaciones base */
+@keyframes titleGlow {
+    from { text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+    to { text-shadow: 2px 2px 20px rgba(255, 215, 0, 0.6); }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes backgroundFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@keyframes flowerFloat {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    25% { 
+        transform: translateY(-15px) rotate(5deg);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateY(-25px) rotate(-3deg);
+        opacity: 0.9;
+    }
+    75% { 
+        transform: translateY(-15px) rotate(8deg);
+        opacity: 1;
+    }
+}
+
+@keyframes floatTulipSide {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.9;
+    }
+    25% { 
+        transform: translateY(-20px) rotate(5deg);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateY(-40px) rotate(-3deg);
+        opacity: 0.8;
+    }
+    75% { 
+        transform: translateY(-20px) rotate(8deg);
+        opacity: 1;
+    }
+}
+
+@keyframes floatTulipSideRight {
+    0%, 100% { 
+        transform: translateY(0) rotate(-15deg);
+        opacity: 0.9;
+    }
+    25% { 
+        transform: translateY(-20px) rotate(-10deg);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateY(-40px) rotate(-18deg);
+        opacity: 0.8;
+    }
+    75% { 
+        transform: translateY(-20px) rotate(-5deg);
+        opacity: 1;
+    }
+}
+
+/* Animaciones de efectos */
+@keyframes rain-fall {
+    0% {
+        transform: translateY(-20px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes heart-explosion {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-40px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Utilidades */
+.text-center {
+    text-align: center;
+}
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+/* Responsive base */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    h3 {
+        font-size: 1.3rem;
+    }
+    
+    .side-flower {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .floating-flower {
+        width: 30px;
+        height: 30px;
+    }
+} 

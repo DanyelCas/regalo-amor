@@ -1,0 +1,36 @@
+/* ========================================
+   LOVE PAGE STYLES - Estilos principales
+   ======================================== */
+
+/* Importar archivos CSS organizados */
+@import url('base.css');
+@import url('header.css');
+@import url('sections.css');
+@import url('timeline.css');
+@import url('suggestions.css');
+@import url('components.css');
+
+/* ========================================
+   NOTAS DE ORGANIZACIÓN
+   ========================================
+   
+   Esta página está organizada en archivos CSS separados:
+   
+   📁 css/
+   ├── base.css          - Variables, reset, tipografía base
+   ├── header.css        - Header, contadores, corazón animado
+   ├── sections.css      - Carta de amor, galería, footer
+   ├── timeline.css      - Timeline y sus animaciones
+   ├── suggestions.css   - Buzones y sistema de sugerencias
+   ├── components.css    - Modales, admin panel, formularios
+   └── styles.css        - Archivo principal (este archivo)
+   
+   Para modificar estilos específicos:
+   - Variables y colores: base.css
+   - Header y contadores: header.css
+   - Secciones principales: sections.css
+   - Timeline: timeline.css
+   - Sugerencias: suggestions.css
+   - Componentes: components.css
+   
+   ======================================== */ 

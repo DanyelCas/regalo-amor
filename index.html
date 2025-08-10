@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para el amor de mi vida ❤️</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Partículas flotantes -->
+    <div id="particles"></div>
+    
+    <!-- Header romántico -->
+    <header class="header">
+        <div class="heart-container">
+            <div class="heart"></div>
+        </div>
+        <h1 class="title">Para Betzi, el amor de mi vida</h1>
+        <p class="subtitle">Cada día a tu lado es un regalo, mi amor 🌻❤️</p>
+    </header>
+
+    <!-- Contadores de días -->
+    <section class="counters-section">
+        <div class="counters-container">
+            <!--<div class="counter-item">
+                <h2>Días desde que nos conocimos</h2>
+                <div class="counter" id="meetingCounter">0</div>
+                <p>Desde que Daniel y Betzi se conocieron</p>
+            </div>-->
+            <div class="counter-item">
+                <h2>Tiempo como novios</h2>
+                <div class="counter" id="relationshipCounter">
+                  <div class="counter-box">
+                    <div class="number" id="years">0</div>
+                    <div class="label">Años</div>
+                  </div>
+                  <div class="counter-box">
+                    <div class="number" id="months">0</div>
+                    <div class="label">Meses</div>
+                  </div>
+                  <div class="counter-box">
+                    <div class="number" id="days">0</div>
+                    <div class="label">Días</div>
+                  </div>
+                  <div class="counter-box">
+                    <div class="number" id="hours">0</div>
+                    <div class="label">Horas</div>
+                  </div>
+                  <div class="counter-box">
+                    <div class="number" id="minutes">0</div>
+                    <div class="label">Minutos</div>
+                  </div>
+                  <div class="counter-box">
+                    <div class="number" id="seconds">0</div>
+                    <div class="label">Segundos</div>
+                  </div>
+                </div>
+                <p>... desde que Daniel y Betzi son novios</p>
+              </div>
+        </div>
+    </section>
+
+    <!-- Carta de amor digital -->
+    <section class="love-letter-section">
+        <div class="letter-container">
+            <h2>Mi carta de amor para ti</h2>
+            <div class="letter-content">
+                <div class="typing-text" id="loveLetter">
+                    Mi querida Betzi, cada día que pasa me doy cuenta de lo afortunado que soy de tenerte en mi vida. 
+                    Tu sonrisa ilumina mis días más oscuros, tu amor me hace sentir completo. 
+                    Contigo he aprendido que el amor verdadero existe, que hay alguien que me entiende sin palabras. 
+                    Gracias por ser exactamente como eres, por aceptarme tal como soy. 
+                    Te amo más de lo que las palabras pueden expresar. 
+                    Eres mi presente, mi futuro, mi todo. Con amor, Daniel ❤️🌻
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline de momentos especiales -->
+    <section class="timeline-section">
+        <h2>Nuestra historia de amor</h2>
+        
+        <!-- Botón para agregar nuevo evento -->
+        <div class="timeline-controls">
+            <button class="add-timeline-btn" onclick="Utils.showAddTimelineForm()">
+                ➕ Agregar Nuevo Momento
+            </button>
+        </div>
+        
+        <div class="timeline">
+
+        </div>
+    </section>
+
+    <!-- Galería de recuerdos con Swiper -->
+    <div class="gallery-section">
+        <div class="section-header">
+            <h2 class="titulo">Nuestros recuerdos</h2>
+            <div>
+                <button class="add-btn" onclick="Utils.showAddGalleryForm()" title="Agregar nueva foto">
+                    ➕ Agregar Nuevo Recuerdo
+                </button>
+            </div>
+        </div>
+        <div class="swiper gallery-swiper">
+            <div class="swiper-wrapper" id="gallerySwiperWrapper">
+                <!-- Las tarjetas se agregan dinámicamente aquí -->
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="gallery-actions-bar">
+            <button class="show-all-btn" onclick="LovePage.showAllGalleryModal()">Ver todos los recuerdos</button>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar todos los recuerdos -->
+    <div class="modal-overlay" id="allGalleryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📸 Todos los recuerdos</h3>
+                <button class="close-modal" onclick="LovePage.closeAllGalleryModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="gallery all-gallery-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes románticos aleatorios -->
+    <section class="messages-section">
+        <div class="message-container">
+            <div class="message" id="randomMessage">
+                Te amo más que ayer, pero menos que mañana, Betzi ❤️🌻
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Sugerencias -->
+    <section class="suggestions-section">
+        <h2>💌 Nuestros Buzoncitos de Amor</h2>
+        <p class="suggestions-subtitle">Comparte tus pensamientos, sugerencias y mensajes especiales</p>
+        
+        <div class="mailboxes-container">
+            <!-- Buzón de Daniel -->
+            <div class="mailbox daniel-mailbox">
+                <div class="mailbox-header">
+                    <h3>📮 Buzón de Daniel</h3>
+                    <div class="mailbox-icon">👨‍💼</div>
+                </div>
+                <div class="mailbox-content">
+                    <div class="suggestion-form">
+                        <textarea id="danielSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Betzi... 💕" maxlength="300"></textarea>
+                        <div class="char-counter">
+                            <span id="danielCharCount">0</span>/300
+                        </div>
+                        <button class="send-suggestion" onclick="sendSuggestion('daniel')">
+                            <span>📤 Enviar</span>
+                        </button>
+                    </div>
+                    <div class="suggestions-list" id="danielSuggestions">
+                        <!-- Las sugerencias se agregarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buzón de Betzi -->
+            <div class="mailbox betzi-mailbox">
+                <div class="mailbox-header">
+                    <h3>📮 Buzón de Betzi</h3>
+                    <div class="mailbox-icon">👩‍💼</div>
+                </div>
+                <div class="mailbox-content">
+                    <div class="suggestion-form">
+                        <textarea id="betziSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Daniel... 💕" maxlength="300"></textarea>
+                        <div class="char-counter">
+                            <span id="betziCharCount">0</span>/300
+                        </div>
+                        <button class="send-suggestion" onclick="sendSuggestion('betzi')">
+                            <span>📤 Enviar</span>
+                        </button>
+                    </div>
+                    <div class="suggestions-list" id="betziSuggestions">
+                        <!-- Las sugerencias se agregarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Hecho con ❤️ para ti, Betzi - Con amor, Daniel</p>
+        <div class="floating-hearts">
+            <span>❤️</span>
+            <span>💕</span>
+            <span>🌻</span>
+            <span>💖</span>
+            <span>🌷</span>
+            <span>💝</span>
+        </div>
+    </footer>
+
+    <!-- Panel de Administración -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h3>⚙️ Panel de Administración</h3>
+            <button class="close-admin" onclick="Utils.toggleAdminPanel()">✕</button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <h4>📊 Estadísticas</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="suggestionsCount">0</span>
+                        <span class="stat-label">Sugerencias</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="timelineCount">0</span>
+                        <span class="stat-label">Timeline</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="galleryCount">0</span>
+                        <span class="stat-label">Fotos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="repliesCount">0</span>
+                        <span class="stat-label">Respuestas</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h4>💾 Gestión de Datos</h4>
+                <div class="admin-buttons">
+                    <button class="admin-btn export-btn" onclick="dataManager.exportData()">
+                        📤 Exportar Datos
+                    </button>
+                    <button class="admin-btn import-btn" onclick="Utils.importData()">
+                        📥 Importar Datos
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="Utils.handleImport(event)">
+                </div>
+            </div>   
+
+        </div>
+    </div>
+
+    <!-- Formulario para agregar evento al timeline -->
+    <div class="modal-overlay" id="timelineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="timelineModalTitle">➕ Agregar Nuevo Momento</h3>
+                <button class="close-modal" onclick="Utils.closeTimelineModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="addTimelineForm">
+                    <input type="hidden" id="timelineItemId">
+                    <div class="form-group">
+                        <label for="timelineDate">📅 Fecha:</label>
+                        <input type="date" id="timelineDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineTitle">📝 Título:</label>
+                        <input type="text" id="timelineTitle" placeholder="Ej: Nuestro primer viaje juntos" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineDescription">💭 Descripción:</label>
+                        <textarea id="timelineDescription" placeholder="Describe este momento especial..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineLocation">📍 Ubicación:</label>
+                        <input type="text" id="timelineLocation" placeholder="Ej: En el centro de la ciudad">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineTime">⏰ Momento del día:</label>
+                        <input type="text" id="timelineTime" placeholder="Ej: Atardecer mágico">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timelineIcon">🎯 Icono:</label>
+                        <select id="timelineIcon">
+                            <option value="💕">💕 Amor</option>
+                            <option value="☕">☕ Café</option>
+                            <option value="💋">💋 Beso</option>
+                            <option value="🌻">🌻 Girasol</option>
+                            <option value="🌷">🌷 Tulipán</option>
+                            <option value="🎉">🎉 Celebración</option>
+                            <option value="✈️">✈️ Viaje</option>
+                            <option value="🍕">🍕 Comida</option>
+                            <option value="🎬">🎬 Película</option>
+                            <option value="🎵">🎵 Música</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="Utils.closeTimelineModal()">
+                            ❌ Cancelar
+                        </button>
+                        <button type="submit" class="save-btn" id="timelineSaveBtn">
+                            💾 Guardar Momento
+                        </button>
+                        <button type="button" class="delete-btn" id="timelineDeleteBtn" style="display: none;" onclick="Utils.deleteTimelineItem()">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario para agregar/editar foto de galería -->
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="galleryModalTitle">📸 Agregar Nueva Foto</h3>
+                <button class="close-modal" onclick="Utils.closeGalleryModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="addGalleryForm">
+                    <div class="form-group" id="currentImagePreview" style="display:none;">
+                        <label>📷 Imagen actual:</label>
+                        <img id="galleryImagePreview" src="" style="max-width: 100%; border-radius: 8px;">
+                    </div>
+                    <input type="hidden" id="galleryItemId">
+                    <input type="hidden" id="galleryImage">
+                    <div class="form-group">
+                        <label for="galleryTitle">📝 Título:</label>
+                        <input type="text" id="galleryTitle" placeholder="Ej: Nuestra primera foto juntos" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="galleryDescription">💭 Descripción:</label>
+                        <textarea id="galleryDescription" placeholder="Describe esta foto especial..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="galleryImageFile">🖼️ Imagen:</label>
+                        <input type="file" id="galleryImageFile" accept="image/*">
+                        <small>Selecciona una imagen para subir</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="galleryDate">📅 Fecha:</label>
+                        <input type="date" id="galleryDate" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="Utils.closeGalleryModal()">
+                            ❌ Cancelar
+                        </button>
+                        <button type="submit" class="save-btn" id="gallerySaveBtn">
+                            💾 Guardar Foto
+                        </button>
+                        <button type="button" class="delete-btn" id="galleryDeleteBtn" style="display: none;" onclick="Utils.deleteGalleryItem()">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón flotante para administración -->
+    <button class="admin-toggle" onclick="Utils.toggleAdminPanel()">
+        ⚙️
+    </button>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script src="js/config.js" defer></script>
+    <script src="js/supabase-config.js" defer></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/effects.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/script.js" defer></script>
+
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+     
+</body>
+</html>
