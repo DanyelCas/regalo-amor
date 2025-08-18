@@ -521,7 +521,7 @@ class DataManager {
                 title: photo.title,
                 description: photo.description,
                 image: photo.image,
-                date: new Date().toISOString()
+                date: photo.date
             };
 
             const { error } = await this.supabase

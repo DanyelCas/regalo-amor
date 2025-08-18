@@ -34,3 +34,93 @@
    - Componentes: components.css
    
    ======================================== */ 
+
+   /* Contenedor de la lista */
+.all-gallery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;                 /* separación entre posts */
+  padding: 16px;
+}
+
+/* Cada post */
+.gallery-item-all {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Imagen */
+.gallery-image-all img {
+  width: 100%;
+  height: auto;              /* mantiene proporción real */
+  display: block;
+  object-fit: contain;       /* no recorta la imagen */
+  background: #fafafa;       /* fondo neutro tipo Instagram */
+}
+
+/* Placeholder si no hay imagen */
+.image-placeholder-all {
+  width: 100%;
+  height: 300px;
+  border: 2px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: #999;
+  background: #fafafa;
+}
+
+/* Info debajo */
+/* 📌 Textos de cada ítem */
+.gallery-info-all {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+}
+
+.gallery-info-all h3 {
+  font-size: 25px;
+  font-weight: 600;
+  color: #262626; /* negro Instagram */
+  margin-bottom: 4px;
+}
+
+.gallery-info-all p {
+  font-size: 14px;
+  color: #555; /* gris medio */
+  line-height: 1.4;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.gallery-date-all {
+  font-size: 12px;
+  color: #888; /* gris claro */
+  margin-top: auto;
+  display: block;
+}
+
+/* 📌 Botón editar */
+.gallery-actions {
+  margin-top: 8px;
+}
+
+.gallery-actions .edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.gallery-actions .edit-btn:hover {
+  transform: scale(1.2);
+  opacity: 0.7;
+}
+

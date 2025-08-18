@@ -899,9 +899,15 @@ class Utils {
     static showAddGalleryForm() {
         const modal = document.getElementById('galleryModal');
         modal.classList.add('active');
+        document.getElementById('galleryImagePreview').src = null;
         
-        // Establecer fecha actual por defecto
-        document.getElementById('galleryDate').value = new Date().toISOString().split('T')[0];
+        // Enfocar el primer campo
+        document.getElementById('galleryTitle').focus();
+    }
+
+    static showAddGalleryFormEdit() {
+        const modal = document.getElementById('galleryModal');
+        modal.classList.add('active');
         
         // Enfocar el primer campo
         document.getElementById('galleryTitle').focus();
@@ -929,6 +935,8 @@ class Utils {
         const date = document.getElementById('galleryDate').value;
         const fileInput = document.getElementById('galleryImageFile');
         const file = fileInput.files[0];
+
+        console.log('Guardando evento de galería:', { title, description, date, file });
 
         // Validar campos requeridos
         if (!title || !description || !date) {
@@ -1008,7 +1016,9 @@ class Utils {
             document.getElementById('galleryTitle').value = item.title;
             document.getElementById('galleryDescription').value = item.description;
             document.getElementById('galleryImage').value = item.image || '';
-            document.getElementById('galleryDate').value = item.date;
+            console.log(item.date.split('T')[0]);
+            document.getElementById('galleryDate').value = item.date.split('T')[0];
+            console.log('Fecha de la foto:', document.getElementById('galleryDate').value);
 
             // Mostrar imagen actual si existe
             if (item.image) {
@@ -1026,7 +1036,7 @@ class Utils {
             console.log(item.id, item.title, item.description, item.image, item.date);
             
             // Abrir modal
-            Utils.showAddGalleryForm();
+            Utils.showAddGalleryFormEdit();
             
         } catch (error) {
             console.error('Error editando gallery item:', error);

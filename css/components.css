@@ -27,7 +27,11 @@
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     width: 90%;
-    overflow-y: auto;
+    max-width: 800px;
+    max-height: 90vh;        /* 🔥 límite de altura */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;        /* el scroll se controla en modal-body */
     animation: modalSlideIn 0.3s ease;
 }
 
@@ -46,10 +50,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 25px;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.05));
-    border-radius: 20px 20px 0 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    background: rgba(255,255,255,0.85);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-body {
+    flex: 1;                  /* ocupa el resto del espacio */
+    overflow-y: auto;         /* 🔥 scroll aquí */
+    padding: 16px;
 }
 
 .modal-header h3 {

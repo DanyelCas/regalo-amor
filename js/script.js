@@ -282,6 +282,9 @@ class LovePage {
             wrapper.innerHTML = '<div class="swiper-slide"><div class="gallery-item"><p>No hay recuerdos aún.</p></div></div>';
         } else {
             this.galleryItems.forEach(item => {
+                const rawDate = item.date.split('T')[0];
+                const [year, month, day] = rawDate.split('-');
+                const formattedDate = `${day}/${month}/${year}`;
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
@@ -293,7 +296,7 @@ class LovePage {
                         <div class="gallery-info">
                             <h3>${item.title}</h3>
                             <p>${item.description}</p>
-                            <span class="gallery-date">${new Date(item.date).toLocaleDateString()}</span>
+                            <span class="gallery-date">${formattedDate}</span>
                             <div class="gallery-actions">
                                 <button class="edit-btn" onclick="Utils.editGalleryItem('${item.id}')" title="Editar">✏️</button>
                             </div>
@@ -353,17 +356,21 @@ class LovePage {
         const list = modal.querySelector('.all-gallery-list');
         list.innerHTML = '';
         window.lovePage.galleryItems.forEach(item => {
+            const rawDate = item.date.split('T')[0];
+            const [year, month, day] = rawDate.split('-');
+            const formattedDate = `${day}/${month}/${year}`;
+
             const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
+            galleryItem.className = 'gallery-item-all';
             galleryItem.innerHTML = `
-                <div class="gallery-image">
+                <div class="gallery-image-all">
                     ${item.image ? `<img src="${item.image}" alt="${item.title}">` : 
-                    `<div class="image-placeholder"><span>📸</span><p>Agregar foto</p></div>`}
+                    `<div class="image-placeholder-all"><span>📸</span><p>Agregar foto</p></div>`}
                 </div>
-                <div class="gallery-info">
+                <div class="gallery-info-all">
                     <h3>${item.title}</h3>
                     <p>${item.description}</p>
-                    <span class="gallery-date">${new Date(item.date).toLocaleDateString()}</span>
+                    <span class="gallery-date-all">${formattedDate}</span>
                     <div class="gallery-actions">
                         <button class="edit-btn" onclick="Utils.editGalleryItem('${item.id}')" title="Editar">✏️</button>
                     </div>
