@@ -1,5 +1,7 @@
 // Utilidades y funciones auxiliares
 class Utils {
+
+    static editando = false;
     // Calcular días entre dos fechas
     static calculateDaysDifference(startDate, endDate = new Date()) {
         const timeDiff = endDate.getTime() - startDate.getTime();
@@ -897,9 +899,14 @@ class Utils {
 
     // Funciones para la galería
     static showAddGalleryForm() {
+        console.log('Mostrando formulario para agregar foto a la galería');
         const modal = document.getElementById('galleryModal');
         modal.classList.add('active');
-        document.getElementById('galleryImagePreview').src = null;
+        
+        setTimeout(() => {
+            document.getElementById('galleryImagePreview').src = null;
+            document.getElementById('currentImagePreview').style.display = 'none';
+        }, 100);
         
         // Enfocar el primer campo
         document.getElementById('galleryTitle').focus();
@@ -920,11 +927,13 @@ class Utils {
         // Limpiar formulario
         document.getElementById('addGalleryForm').reset();
         document.getElementById('galleryItemId').value = '';
+        document.getElementById('galleryImageFile').value = "";
         
         // Resetear título y botones
         document.getElementById('galleryModalTitle').textContent = '📸 Agregar Nueva Foto';
         document.getElementById('gallerySaveBtn').textContent = '💾 Guardar Foto';
         document.getElementById('galleryDeleteBtn').style.display = 'none';
+        document.getElementById('galleryImagePreview').src = null;
     }
 
     static async saveGalleryEvent(event) {
@@ -937,10 +946,20 @@ class Utils {
         const file = fileInput.files[0];
 
         console.log('Guardando evento de galería:', { title, description, date, file });
+        console.log('Archivo seleccionado:', file);
 
         // Validar campos requeridos
         if (!title || !description || !date) {
             await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos 💕');
+            return;
+        }
+
+        console.log('editando:', Utils.editando);
+        console.log('file:', file);
+
+        // Validar file, si es que es un registro nuevo
+        if (!Utils.editando && file == undefined) {
+            await Utils.showSpecialNotification('Por favor, selecciona una imagen 💕');
             return;
         }
 
@@ -982,10 +1001,15 @@ class Utils {
 
             if (success) {
                 Utils.closeGalleryModal();
+                Utils.editando = false
                 const data = await dataManager.loadData();
                 window.lovePage.loadGallery(data.gallery);
                 const message = itemId ? '¡Foto actualizada con amor! 💕' : '¡Nueva foto agregada con amor! 💕';
                 await Utils.showSpecialNotification(message);
+                const modal = document.getElementById('allGalleryModal');
+                if (modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                }
                 visualEffects.createHeartExplosion(window.innerWidth / 2, window.innerHeight / 2);
             } else {
                 await Utils.showSpecialNotification('Error al guardar la foto 💔');
@@ -1032,6 +1056,7 @@ class Utils {
             document.getElementById('galleryModalTitle').textContent = '✏️ Editar Foto';
             document.getElementById('gallerySaveBtn').textContent = '💾 Actualizar Foto';
             document.getElementById('galleryDeleteBtn').style.display = 'inline-block';
+            Utils.editando = true;
 
             console.log(item.id, item.title, item.description, item.image, item.date);
             
@@ -1077,5 +1102,9 @@ class Utils {
             console.error('Error eliminando gallery item:', error);
             await Utils.showSpecialNotification('Error al eliminar la foto 💔');
         }
+    }
+
+    static refreshSuggestions() {
+        this.loadSuggestions();
     }
 }
