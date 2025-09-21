@@ -178,7 +178,6 @@ class DataManager {
             .channel('config')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'config' }, 
                 (payload) => {
-                    console.log('Config actualizada:', payload);
                     this.handleConfigChange(payload);
                 })
             .subscribe();
@@ -188,7 +187,6 @@ class DataManager {
             .channel('timeline')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'timeline' }, 
                 (payload) => {
-                    console.log('Timeline actualizado:', payload);
                     this.handleTimelineChange(payload);
                 })
             .subscribe();
@@ -198,7 +196,6 @@ class DataManager {
             .channel('gallery')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, 
                 (payload) => {
-                    console.log('Galería actualizada:', payload);
                     this.handleGalleryChange(payload);
                 })
             .subscribe();
@@ -208,7 +205,6 @@ class DataManager {
             .channel('suggestions')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'suggestions' }, 
                 (payload) => {
-                    console.log('Sugerencias actualizadas:', payload);
                     this.handleSuggestionsChange(payload);
                 })
             .subscribe();
@@ -353,9 +349,13 @@ class DataManager {
     async loadSuggestions() {
         try {
             const { data, error } = await this.supabase
-                .from('suggestions')
-                .select('*')
-                .order('date', { ascending: false });
+            .from('suggestions')
+            .select(`
+                *,
+                replies(*)
+            `)
+            .order('date', { ascending: false });
+          
 
             if (error) {
                 console.error('Error cargando suggestions:', error);
@@ -542,7 +542,6 @@ class DataManager {
 
     // Actualizar foto de la galería
     async updateGalleryPhoto(id, updates) {
-        console.log('Actualizando foto de galería con ID:', id, 'con datos:', updates);
         try {
             const { error } = await this.supabase
                 .from('gallery')

@@ -145,6 +145,17 @@
         <h2>💌 Nuestros Buzoncitos de Amor</h2>
         <p class="suggestions-subtitle">Comparte tus pensamientos, sugerencias y mensajes especiales</p>
         
+        <!-- Botón de login para invitados -->
+        <div class="login-prompt" id="loginPrompt" style="display: none;">
+            <div class="login-prompt-content">
+                <h3>🔒 Acceso Restringido</h3>
+                <p>Para escribir mensajes de amor, necesitas iniciar sesión</p>
+                <button class="show-login-btn" onclick="authUI.showLoginModal()">
+                    <span>💕 Iniciar Sesión</span>
+                </button>
+            </div>
+        </div>
+        
         <div class="mailboxes-container">
             <!-- Buzón de Daniel -->
             <div class="mailbox daniel-mailbox">
@@ -369,9 +380,55 @@
         </div>
     </div>
 
+    <!-- Modal de Login Romántico -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content login-modal">
+            <div class="login-container">
+                <div class="login-header">
+                    <div class="heart-animation">💕</div>
+                    <h2>Bienvenida a nuestra página</h2>
+                    <p>Ingresa tus datos para acceder a todas las funciones especiales</p>
+                </div>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="loginUsuario">👤 Usuario:</label>
+                        <input type="text" id="loginUsuario" placeholder="Tu nombre de usuario especial" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">🔒 Contraseña:</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña secreta" required>
+                    </div>
+                    
+                    <div class="login-actions">
+                        <button type="submit" class="login-btn">
+                            <span>💕 Iniciar Sesión</span>
+                        </button>
+                        <button type="button" class="guest-btn" onclick="authUI.loginAsGuest()">
+                            <span>👋 Continuar como Invitado</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="login-info">
+                    <p><strong>Ingresa tus credenciales:</strong></p>
+                    <p>💫 <strong>foquito</strong> - Para Daniel</p>
+                    <p>✨ <strong>amuletito</strong> - Para Betzi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Botón flotante para administración -->
+    <span id="userNameDisplay" class="user-name-display"></span>
     <button class="admin-toggle" onclick="Utils.toggleAdminPanel()">
         ⚙️
+    </button>
+
+    <!-- Botón flotante para cerrar sesión -->
+    <button class="logout-toggle" id="logoutBtn" onclick="authUI.logout()" style="display: none;">
+        👋
     </button>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
@@ -383,6 +440,8 @@
     <script src="js/data.js" defer></script>
     <script src="js/effects.js" defer></script>
     <script src="js/utils.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/auth-ui.js" defer></script>
     <script src="js/script.js" defer></script>
 
     <link

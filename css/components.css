@@ -268,6 +268,24 @@
     outline: none;
 }
 
+.user-name-display {
+    position: fixed;
+    bottom: 20px;
+    right: 150px;
+    height: 50px;
+    padding: 0 15px;           /* espacio interno a los lados */
+    background-color: #00000087; /* un rojo más suave */
+    color: #fff;                /* texto blanco */
+    border: none;
+    border-radius: 12px;        /* esquinas más suaves */
+    font-size: 18px;
+    line-height: 50px;          /* centra verticalmente el texto */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* sombra ligera */
+    z-index: 1000;
+    cursor: default;            /* no se ve como botón */
+    transition: transform 0.2s; /* efecto al pasar mouse */
+}
+
 
 /* Panel de Administración */
 .admin-toggle {
@@ -476,5 +494,277 @@
     .cancel-btn,
     .save-btn {
         width: 100%;
+    }
+}
+
+/* ========================================
+   LOGIN ROMÁNTICO - Estilos del sistema de login
+   ======================================== */
+
+/* Modal de Login Romántico */
+.login-modal {
+    background: linear-gradient(135deg, #ff6b9d, #ffd93d, #6bcf7f);
+    border-radius: 25px;
+    padding: 0;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(255, 107, 157, 0.3);
+    animation: loginSlideIn 0.5s ease-out;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px 30px;
+    margin: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.heart-animation {
+    font-size: 48px;
+    animation: heartBeat 2s infinite;
+    margin-bottom: 15px;
+}
+
+.login-header h2 {
+    color: #ff6b9d;
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.login-form {
+    margin-bottom: 25px;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    color: #ff6b9d;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ffd93d;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #ff6b9d;
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
+    transform: translateY(-2px);
+}
+
+.login-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.login-btn, .guest-btn {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+.guest-btn {
+    background: linear-gradient(135deg, #6bcf7f, #8dd3a0);
+    color: white;
+    box-shadow: 0 4px 15px rgba(107, 207, 127, 0.3);
+}
+
+.guest-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 207, 127, 0.4);
+}
+
+.login-info {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid #ffd93d;
+}
+
+.login-info p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.login-info strong {
+    color: #ff6b9d;
+}
+
+/* Botón de logout */
+.logout-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.logout-toggle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+/* Animaciones del login */
+@keyframes loginSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Prompt de login para invitados */
+.login-prompt {
+    background: linear-gradient(135deg, #ff6b9d, #ffd93d);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 20px 0;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2);
+    animation: loginPromptSlide 0.5s ease-out;
+}
+
+.login-prompt-content h3 {
+    color: white;
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.login-prompt-content p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    margin: 0 0 20px 0;
+}
+
+.show-login-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #ff6b9d;
+    border: none;
+    border-radius: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+.show-login-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+}
+
+@keyframes loginPromptSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive para login */
+@media (max-width: 768px) {
+    .login-modal {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .login-container {
+        padding: 30px 20px;
+    }
+    
+    .login-header h2 {
+        font-size: 24px;
+    }
+    
+    .heart-animation {
+        font-size: 40px;
+    }
+    
+    .logout-toggle {
+        right: 70px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .login-prompt {
+        margin: 15px 0;
+        padding: 20px;
+    }
+    
+    .login-prompt-content h3 {
+        font-size: 20px;
     }
 }

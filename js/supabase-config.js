@@ -76,6 +76,15 @@ CREATE TABLE IF NOT EXISTS replies (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Crear tabla de usuarios
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    usuario TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    real_name TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Insertar configuración por defecto
 INSERT INTO config (names, dates, messages) VALUES (
     '{"person1": "Daniel", "person2": "Betzi"}',
@@ -98,12 +107,22 @@ INSERT INTO gallery (title, description) VALUES
 ('Una celebración', 'Agrega aquí una celebración'),
 ('El momento más reciente', 'Agrega aquí el momento más reciente');
 
+-- Insertar usuarios por defecto (contraseñas en MD5)
+-- MD5 de "hello" = 5d41402abc4b2a76b9719d911017c592
+INSERT INTO users (usuario, password, real_name) VALUES
+('foquito', '5d41402abc4b2a76b9719d911017c592', 'Daniel'),  -- "hello" en MD5
+('amuletito', '5d41402abc4b2a76b9719d911017c592', 'Betzi')  -- "hello" en MD5
+ON CONFLICT (usuario) DO UPDATE SET 
+    password = EXCLUDED.password,
+    real_name = EXCLUDED.real_name;
+
 -- Habilitar Row Level Security (RLS)
 ALTER TABLE config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE timeline ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE suggestions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE replies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- Crear políticas para permitir lectura y escritura anónima
 CREATE POLICY "Allow anonymous read" ON config FOR SELECT USING (true);
@@ -129,6 +148,8 @@ CREATE POLICY "Allow anonymous read" ON replies FOR SELECT USING (true);
 CREATE POLICY "Allow anonymous insert" ON replies FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow anonymous update" ON replies FOR UPDATE USING (true);
 CREATE POLICY "Allow anonymous delete" ON replies FOR DELETE USING (true);
+
+CREATE POLICY "Allow anonymous read" ON users FOR SELECT USING (true);
 `;
 
 // Función para validar configuración

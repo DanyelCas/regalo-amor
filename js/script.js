@@ -14,6 +14,9 @@ class LovePage {
         // Agregar estilos dinámicos
         Utils.addDynamicStyles();
         
+        // Inicializar sistema de autenticación
+        await this.initializeAuthSystem();
+        
         // Inicializar efectos visuales
         this.initializeVisualEffects();
         
@@ -28,8 +31,37 @@ class LovePage {
         
         // Configurar intervalos
         this.setupIntervals();
+
         
         this.isInitialized = true;
+    }
+
+    // Inicializar sistema de autenticación
+    async initializeAuthSystem() {
+        // El sistema de auth se inicializa automáticamente
+        // Solo verificamos que esté disponible
+        if (typeof authManager === 'undefined') {
+            console.error('Sistema de autenticación no disponible');
+            return;
+        }
+        
+        // Esperar a que Supabase esté disponible para cargar usuarios
+        await this.waitForSupabase();
+        
+        // Aplicar permisos iniciales
+        this.applyInitialPermissions();
+        
+        console.log('Sistema de autenticación inicializado');
+    }
+
+    // Aplicar permisos iniciales
+    applyInitialPermissions() {
+        // Esperar un poco para que la UI esté lista
+        setTimeout(() => {
+            if (typeof authUI !== 'undefined' && authUI.updateAllPermissions) {
+                authUI.updateAllPermissions();
+            }
+        }, 1000);
     }
 
     // Inicializar efectos visuales
@@ -70,10 +102,13 @@ class LovePage {
         
         // Inicializar formulario del timeline
         this.initializeTimelineForm();
+
+        this.initializeNameData();
     }
 
     // Inicializar formulario del timeline
     initializeTimelineForm() {
+        // Mostrar el nombre al cargar la página
         const timelineForm = document.getElementById('addTimelineForm');
         const galleryForm = document.getElementById('addGalleryForm');
         
@@ -84,6 +119,20 @@ class LovePage {
         if (galleryForm) {
             galleryForm.addEventListener('submit', Utils.saveGalleryEvent);
         }
+    }
+
+    initializeNameData() {
+        let name = authManager.getCurrentUserRealName();
+        let message = "";
+        if(name === 'foquito') {
+            message = 'Daniel, dale mucho amor';
+        } else if(name === 'amuletito') {
+            message = 'Betzi, recuerda que te amo mucho';
+        } else {
+            message = 'Invitado';
+        }
+
+        document.getElementById('userNameDisplay').textContent = message;
     }
 
     // Inicializar sistema de datos
@@ -106,9 +155,7 @@ class LovePage {
             
             // Cargar galería dinámica
             await this.loadGallery(data.gallery);
-            
-            console.log('Sistema de datos inicializado:', await dataManager.getStats());
-            
+                        
         } catch (error) {
             console.error('Error inicializando sistema de datos:', error);
             this.showDataError();
@@ -483,9 +530,7 @@ class LovePage {
         }
         
         // Limpiar efectos visuales
-        visualEffects.cleanup();
-        
-        console.log('Recursos limpiados');
+        visualEffects.cleanup();     
     }
 }
 
@@ -500,8 +545,21 @@ async function sendSuggestion(person) {
         return;
     }
     
-    const sender = person === 'daniel' ? 'Daniel' : 'Betzi';
-    const recipient = person === 'daniel' ? 'Betzi' : 'Daniel';
+    // Verificar restricciones de autenticación
+    const mailboxOwner = person === 'daniel' ? 'Daniel' : 'Betzi';
+    if (authManager && !authManager.canWriteInMailbox(mailboxOwner)) {
+        const role = authManager.getCurrentUserRole();
+        if (role === 'guest') {
+            alert('🔒 Debes iniciar sesión para escribir mensajitos 💕');
+        } else {
+            alert(`No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de ${person === 'daniel' ? 'Betzi' : 'Daniel'} 💕`);
+        }
+        return;
+    }
+
+    const envia = authManager.getCurrentUserRealName();
+    const sender = envia === 'foquito' ? 'Daniel' : 'Betzi';
+    const recipient = envia === 'foquito' ? 'Betzi' : 'Daniel';
     
     try {
         const success = await dataManager.addSuggestion(sender, recipient, text);

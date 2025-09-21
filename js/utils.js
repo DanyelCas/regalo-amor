@@ -454,6 +454,18 @@ class Utils {
             return;
         }
 
+        // Verificar restricciones de autenticación
+        const mailboxOwner = person === 'daniel' ? 'Daniel' : 'Betzi';
+        if (authManager && !authManager.canWriteInMailbox(mailboxOwner)) {
+            const role = authManager.getCurrentUserRole();
+            if (role === 'guest') {
+                await this.showSpecialNotification('🔒 Debes iniciar sesión para escribir mensajitos💕');
+            } else {
+                await this.showSpecialNotification(`No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de ${person === 'daniel' ? 'Betzi' : 'Daniel'} 💕`);
+            }
+            return;
+        }
+
         // Determinar el destinatario (el otro buzón)
         const recipient = person === 'daniel' ? 'Betzi' : 'Daniel';
         const senderName = person === 'daniel' ? 'Daniel' : 'Betzi';
@@ -638,8 +650,9 @@ class Utils {
             return;
         }
 
-        // Determinar quién está respondiendo (el dueño del buzón)
-        const responderName = mailboxPerson === 'daniel' ? 'Daniel' : 'Betzi';
+        // Determinar quién está respondiendo
+        const envia = authManager.getCurrentUserRealName();
+        const responderName = envia === 'foquito' ? 'Daniel' : 'Betzi';
 
         try {
             // Guardar respuesta en el sistema de datos
@@ -844,7 +857,6 @@ class Utils {
             document.getElementById('timelineTime').value = item.time || '';
             document.getElementById('timelineIcon').value = item.icon || '💕';
 
-            console.log('Item encontrado:', item);
             
             // Actualizar título del modal y botones
             document.getElementById('timelineModalTitle').textContent = '✏️ Editar Momento';
@@ -899,7 +911,6 @@ class Utils {
 
     // Funciones para la galería
     static showAddGalleryForm() {
-        console.log('Mostrando formulario para agregar foto a la galería');
         const modal = document.getElementById('galleryModal');
         modal.classList.add('active');
         
@@ -945,17 +956,11 @@ class Utils {
         const fileInput = document.getElementById('galleryImageFile');
         const file = fileInput.files[0];
 
-        console.log('Guardando evento de galería:', { title, description, date, file });
-        console.log('Archivo seleccionado:', file);
-
         // Validar campos requeridos
         if (!title || !description || !date) {
             await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos 💕');
             return;
         }
-
-        console.log('editando:', Utils.editando);
-        console.log('file:', file);
 
         // Validar file, si es que es un registro nuevo
         if (!Utils.editando && file == undefined) {
@@ -1022,13 +1027,11 @@ class Utils {
 
     // Editar item de la galería
     static async editGalleryItem(itemId) {
-        console.log('Editando item de galería con ID:', itemId);
         try {
             // Cargar datos del item
             const gallery = await dataManager.loadGallery();
             const item = gallery.find(g => g.id == itemId);
 
-            console.log('Item encontrado:', item);
             
             if (!item) {
                 await Utils.showSpecialNotification('No se encontró la foto 💔');
@@ -1040,9 +1043,7 @@ class Utils {
             document.getElementById('galleryTitle').value = item.title;
             document.getElementById('galleryDescription').value = item.description;
             document.getElementById('galleryImage').value = item.image || '';
-            console.log(item.date.split('T')[0]);
             document.getElementById('galleryDate').value = item.date.split('T')[0];
-            console.log('Fecha de la foto:', document.getElementById('galleryDate').value);
 
             // Mostrar imagen actual si existe
             if (item.image) {
@@ -1058,7 +1059,6 @@ class Utils {
             document.getElementById('galleryDeleteBtn').style.display = 'inline-block';
             Utils.editando = true;
 
-            console.log(item.id, item.title, item.description, item.image, item.date);
             
             // Abrir modal
             Utils.showAddGalleryFormEdit();
