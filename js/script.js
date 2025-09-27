@@ -334,18 +334,24 @@ class LovePage {
                 const formattedDate = `${day}/${month}/${year}`;
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
+                
+                // Obtener la primera imagen o mostrar placeholder
+                const firstImage = item.images && item.images.length > 0 ? item.images[0] : null;
+                const imageCount = item.images ? item.images.length : 0;
+                
                 slide.innerHTML = `
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="LovePage.expandMemory('${item.id}')">
                         <div class="gallery-image">
-                            ${item.image ? `<img src="${item.image}" alt="${item.title}">` : 
-                            `<div class="image-placeholder"><span>📸</span><p>Agregar foto</p></div>`}
+                            ${firstImage ? `<img src="${firstImage}" alt="${item.title}">` : 
+                            `<div class="image-placeholder"><span>📸</span><p>Agregar fotos</p></div>`}
+                            ${imageCount > 1 ? `<div class="image-count-badge">+${imageCount - 1}</div>` : ''}
                         </div>
                         <div class="gallery-info">
                             <h3>${item.title}</h3>
                             <p>${item.description}</p>
                             <span class="gallery-date">${formattedDate}</span>
                             <div class="gallery-actions">
-                                <button class="edit-btn" onclick="Utils.editGalleryItem('${item.id}')" title="Editar">✏️</button>
+                                <button class="edit-btn" onclick="event.stopPropagation(); Utils.editGalleryItem('${item.id}')" title="Editar">✏️</button>
                             </div>
                         </div>
                     </div>
@@ -402,18 +408,55 @@ class LovePage {
         modal.classList.add('active');
         const list = modal.querySelector('.all-gallery-list');
         list.innerHTML = '';
+        
+        // Agregar carrusel a cada recuerdo que tenga múltiples fotos
         window.lovePage.galleryItems.forEach(item => {
             const rawDate = item.date.split('T')[0];
             const [year, month, day] = rawDate.split('-');
             const formattedDate = `${day}/${month}/${year}`;
+            
+            // Obtener imágenes
+            const images = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+            const imageCount = images.length;
 
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item-all';
+            
+            // Si tiene múltiples fotos, crear carrusel; si no, mostrar imagen única
+            let imageHtml = '';
+            if (imageCount > 1) {
+                imageHtml = `
+                    <div class="mini-carousel-container" onclick="LovePage.expandMemory('${item.id}')">
+                        <div class="mini-carousel" id="miniCarousel-${item.id}">
+                            ${images.map((img, index) => `
+                                <div class="mini-carousel-slide ${index === 0 ? 'active' : ''}">
+                                    <img src="${img}" alt="${item.title} - Foto ${index + 1}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mini-carousel-controls">
+                            <button class="mini-carousel-btn prev" onclick="event.stopPropagation(); LovePage.prevMiniCarousel('${item.id}')">❮</button>
+                            <button class="mini-carousel-btn next" onclick="event.stopPropagation(); LovePage.nextMiniCarousel('${item.id}')">❯</button>
+                        </div>
+                        <div class="image-count-badge-all">${imageCount} fotos</div>
+                    </div>
+                `;
+            } else if (imageCount === 1) {
+                imageHtml = `
+                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}')">
+                        <img src="${images[0]}" alt="${item.title}">
+                    </div>
+                `;
+            } else {
+                imageHtml = `
+                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}')">
+                        <div class="image-placeholder-all"><span>📸</span><p>Agregar fotos</p></div>
+                    </div>
+                `;
+            }
+
             galleryItem.innerHTML = `
-                <div class="gallery-image-all">
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : 
-                    `<div class="image-placeholder-all"><span>📸</span><p>Agregar foto</p></div>`}
-                </div>
+                ${imageHtml}
                 <div class="gallery-info-all">
                     <h3>${item.title}</h3>
                     <p>${item.description}</p>
@@ -424,11 +467,205 @@ class LovePage {
                 </div>
             `;
             list.appendChild(galleryItem);
+            
+            // Inicializar carrusel si tiene múltiples fotos
+            if (imageCount > 1) {
+                window[`miniCarouselIndex_${item.id}`] = 0;
+            }
         });
     }
 
     static closeAllGalleryModal() {
         document.getElementById('allGalleryModal').classList.remove('active');
+    }
+
+    // Funciones para mini carruseles en el modal "Ver todos los recuerdos"
+    static prevMiniCarousel(itemId) {
+        const item = window.lovePage.galleryItems.find(i => i.id == itemId);
+        if (!item) return;
+        
+        const images = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+        if (images.length <= 1) return;
+        
+        const currentIndex = window[`miniCarouselIndex_${itemId}`] || 0;
+        const newIndex = (currentIndex - 1 + images.length) % images.length;
+        window[`miniCarouselIndex_${itemId}`] = newIndex;
+        
+        LovePage.updateMiniCarousel(itemId, newIndex);
+    }
+
+    static nextMiniCarousel(itemId) {
+        const item = window.lovePage.galleryItems.find(i => i.id == itemId);
+        if (!item) return;
+        
+        const images = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+        if (images.length <= 1) return;
+        
+        const currentIndex = window[`miniCarouselIndex_${itemId}`] || 0;
+        const newIndex = (currentIndex + 1) % images.length;
+        window[`miniCarouselIndex_${itemId}`] = newIndex;
+        
+        LovePage.updateMiniCarousel(itemId, newIndex);
+    }
+
+    static updateMiniCarousel(itemId, activeIndex) {
+        const carousel = document.getElementById(`miniCarousel-${itemId}`);
+        if (!carousel) return;
+        
+        const slides = carousel.querySelectorAll('.mini-carousel-slide');
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === activeIndex);
+        });
+    }
+
+    // Expandir recuerdo y mostrar carrusel de fotos
+    static expandMemory(itemId) {
+        const item = window.lovePage.galleryItems.find(i => i.id == itemId);
+        if (!item || !item.images || item.images.length === 0) {
+            Utils.showSpecialNotification('Este recuerdo no tiene fotos aún 💔');
+            return;
+        }
+
+        // Crear modal de expansión si no existe
+        let expandModal = document.getElementById('expandMemoryModal');
+        if (!expandModal) {
+            expandModal = document.createElement('div');
+            expandModal.id = 'expandMemoryModal';
+            expandModal.className = 'modal-overlay';
+            expandModal.innerHTML = `
+                <div class="modal-content expand-modal">
+                    <div class="modal-header">
+                        <h3 id="expandMemoryTitle">${item.title}</h3>
+                        <button class="close-modal" onclick="LovePage.closeExpandMemory()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="memory-carousel-container">
+                            <div class="memory-carousel" id="memoryCarousel">
+                                <!-- Las imágenes se cargarán aquí -->
+                            </div>
+                            <div class="carousel-controls">
+                                <button class="carousel-btn prev-btn" onclick="LovePage.prevMemoryPhoto()">❮</button>
+                                <button class="carousel-btn next-btn" onclick="LovePage.nextMemoryPhoto()">❯</button>
+                            </div>
+                            <div class="carousel-indicators" id="carouselIndicators">
+                                <!-- Los indicadores se generarán aquí -->
+                            </div>
+                            <div class="photo-info" id="photoInfo">Foto 1 de ${item.images.length}</div>
+                        </div>
+                        <div class="memory-info">
+                            <p id="expandMemoryDescription">${item.description}</p>
+                            <span id="expandMemoryDate">${new Date(item.date).toLocaleDateString('es-ES')}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(expandModal);
+        }
+
+        // Actualizar contenido del modal
+        document.getElementById('expandMemoryTitle').textContent = item.title;
+        document.getElementById('expandMemoryDescription').textContent = item.description;
+        document.getElementById('expandMemoryDate').textContent = new Date(item.date).toLocaleDateString('es-ES');
+
+        // Configurar carrusel
+        window.currentMemoryItem = item;
+        window.currentMemoryIndex = 0;
+        LovePage.updateMemoryCarousel();
+
+        // Mostrar modal
+        expandModal.classList.add('active');
+
+        // Agregar soporte para navegación con teclado
+        document.addEventListener('keydown', LovePage.handleCarouselKeyboard);
+    }
+
+    // Actualizar carrusel de fotos del recuerdo
+    static updateMemoryCarousel() {
+        const carousel = document.getElementById('memoryCarousel');
+        const indicators = document.getElementById('carouselIndicators');
+        const photoInfo = document.getElementById('photoInfo');
+        const item = window.currentMemoryItem;
+        const currentIndex = window.currentMemoryIndex;
+
+        if (!carousel || !item) return;
+
+        // Limpiar carrusel
+        carousel.innerHTML = '';
+        indicators.innerHTML = '';
+
+        // Crear slides de imágenes
+        item.images.forEach((imageUrl, index) => {
+            const slide = document.createElement('div');
+            slide.className = `carousel-slide ${index === currentIndex ? 'active' : ''}`;
+            slide.innerHTML = `<img src="${imageUrl}" alt="${item.title} - Foto ${index + 1}">`;
+            carousel.appendChild(slide);
+
+            // Crear indicador
+            const indicator = document.createElement('button');
+            indicator.className = `carousel-indicator ${index === currentIndex ? 'active' : ''}`;
+            indicator.onclick = () => LovePage.goToMemoryPhoto(index);
+            indicators.appendChild(indicator);
+        });
+
+        // Actualizar información de la foto actual
+        if (photoInfo) {
+            photoInfo.textContent = `Foto ${currentIndex + 1} de ${item.images.length}`;
+        }
+    }
+
+    // Navegar a la foto anterior
+    static prevMemoryPhoto() {
+        const item = window.currentMemoryItem;
+        if (!item || item.images.length <= 1) return;
+        
+        window.currentMemoryIndex = (window.currentMemoryIndex - 1 + item.images.length) % item.images.length;
+        LovePage.updateMemoryCarousel();
+    }
+
+    // Navegar a la foto siguiente
+    static nextMemoryPhoto() {
+        const item = window.currentMemoryItem;
+        if (!item || item.images.length <= 1) return;
+        
+        window.currentMemoryIndex = (window.currentMemoryIndex + 1) % item.images.length;
+        LovePage.updateMemoryCarousel();
+    }
+
+    // Ir a una foto específica
+    static goToMemoryPhoto(index) {
+        window.currentMemoryIndex = index;
+        LovePage.updateMemoryCarousel();
+    }
+
+    // Cerrar modal de expansión
+    static closeExpandMemory() {
+        const modal = document.getElementById('expandMemoryModal');
+        if (modal) {
+            modal.classList.remove('active');
+            // Remover listener de teclado
+            document.removeEventListener('keydown', LovePage.handleCarouselKeyboard);
+        }
+    }
+
+    // Manejar navegación con teclado en el carrusel
+    static handleCarouselKeyboard(event) {
+        const modal = document.getElementById('expandMemoryModal');
+        if (!modal || !modal.classList.contains('active')) return;
+
+        switch(event.key) {
+            case 'ArrowLeft':
+                event.preventDefault();
+                LovePage.prevMemoryPhoto();
+                break;
+            case 'ArrowRight':
+                event.preventDefault();
+                LovePage.nextMemoryPhoto();
+                break;
+            case 'Escape':
+                event.preventDefault();
+                LovePage.closeExpandMemory();
+                break;
+        }
     }
 
     // Inicializar animaciones

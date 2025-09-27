@@ -914,13 +914,23 @@ class Utils {
         const modal = document.getElementById('galleryModal');
         modal.classList.add('active');
         
-        setTimeout(() => {
-            document.getElementById('galleryImagePreview').src = null;
-            document.getElementById('currentImagePreview').style.display = 'none';
-        }, 100);
+        // Limpiar formulario
+        document.getElementById('addGalleryForm').reset();
+        document.getElementById('galleryItemId').value = '';
+        document.getElementById('galleryExistingImages').value = '[]';
+        document.getElementById('currentImagesPreview').style.display = 'none';
+        document.getElementById('currentImagesPreview').innerHTML = '';
+        
+        // Actualizar títulos y botones
+        document.getElementById('galleryModalTitle').textContent = '📸 Agregar Nuevo Recuerdo';
+        document.getElementById('gallerySaveBtn').textContent = '💾 Guardar Recuerdo';
+        document.getElementById('galleryDeleteBtn').style.display = 'none';
+        Utils.editando = false;
         
         // Enfocar el primer campo
-        document.getElementById('galleryTitle').focus();
+        setTimeout(() => {
+            document.getElementById('galleryTitle').focus();
+        }, 100);
     }
 
     static showAddGalleryFormEdit() {
@@ -928,7 +938,9 @@ class Utils {
         modal.classList.add('active');
         
         // Enfocar el primer campo
-        document.getElementById('galleryTitle').focus();
+        setTimeout(() => {
+            document.getElementById('galleryTitle').focus();
+        }, 100);
     }
 
     static closeGalleryModal() {
@@ -938,13 +950,14 @@ class Utils {
         // Limpiar formulario
         document.getElementById('addGalleryForm').reset();
         document.getElementById('galleryItemId').value = '';
-        document.getElementById('galleryImageFile').value = "";
+        document.getElementById('galleryExistingImages').value = '[]';
+        document.getElementById('currentImagesPreview').style.display = 'none';
+        document.getElementById('currentImagesPreview').innerHTML = '';
         
         // Resetear título y botones
-        document.getElementById('galleryModalTitle').textContent = '📸 Agregar Nueva Foto';
-        document.getElementById('gallerySaveBtn').textContent = '💾 Guardar Foto';
+        document.getElementById('galleryModalTitle').textContent = '📸 Agregar Nuevo Recuerdo';
+        document.getElementById('gallerySaveBtn').textContent = '💾 Guardar Recuerdo';
         document.getElementById('galleryDeleteBtn').style.display = 'none';
-        document.getElementById('galleryImagePreview').src = null;
     }
 
     static async saveGalleryEvent(event) {
@@ -954,7 +967,7 @@ class Utils {
         const description = document.getElementById('galleryDescription').value;
         const date = document.getElementById('galleryDate').value;
         const fileInput = document.getElementById('galleryImageFile');
-        const file = fileInput.files[0];
+        const files = Array.from(fileInput.files); // Cambio: ahora maneja múltiples archivos
 
         // Validar campos requeridos
         if (!title || !description || !date) {
@@ -962,35 +975,57 @@ class Utils {
             return;
         }
 
-        // Validar file, si es que es un registro nuevo
-        if (!Utils.editando && file == undefined) {
-            await Utils.showSpecialNotification('Por favor, selecciona una imagen 💕');
+        // Validar archivos, si es que es un registro nuevo
+        if (!Utils.editando && files.length === 0) {
+            await Utils.showSpecialNotification('Por favor, selecciona al menos una imagen 💕');
             return;
         }
 
-        let imageUrl = document.getElementById('galleryImage').value || '';
-        if (file) {
-            // Subir imagen a Supabase Storage
-            const fileName = `${Date.now()}_${file.name}`;
-            const { data, error } = await dataManager.supabase.storage
-                .from('gallery-images')
-                .upload(fileName, file);
-
-            if (error) {
-                await Utils.showSpecialNotification('Error al subir la imagen 💔');
-                return;
+        let imageUrls = [];
+        
+        // Obtener URLs existentes si estamos editando
+        const existingImages = document.getElementById('galleryExistingImages').value;
+        if (existingImages) {
+            try {
+                imageUrls = JSON.parse(existingImages);
+            } catch (e) {
+                console.error('Error parsing existing images:', e);
             }
+        }
 
-            // Obtener URL pública
-            imageUrl = dataManager.supabase.storage
-                .from('gallery-images')
-                .getPublicUrl(fileName).data.publicUrl;
+        // Subir nuevas imágenes
+        if (files.length > 0) {
+            for (const file of files) {
+                try {
+                    // Subir imagen a Supabase Storage
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${file.name}`;
+                    const { data, error } = await dataManager.supabase.storage
+                        .from('gallery-images')
+                        .upload(fileName, file);
+
+                    if (error) {
+                        console.error('Error uploading file:', error);
+                        await Utils.showSpecialNotification(`Error al subir ${file.name} 💔`);
+                        continue;
+                    }
+
+                    // Obtener URL pública
+                    const imageUrl = dataManager.supabase.storage
+                        .from('gallery-images')
+                        .getPublicUrl(fileName).data.publicUrl;
+                    
+                    imageUrls.push(imageUrl);
+                } catch (error) {
+                    console.error('Error processing file:', error);
+                    await Utils.showSpecialNotification(`Error al procesar ${file.name} 💔`);
+                }
+            }
         }
 
         const formData = {
             title,
             description,
-            image: imageUrl,
+            images: imageUrls, // Cambio: ahora es un array de imágenes
             date
         };
 
@@ -1009,7 +1044,7 @@ class Utils {
                 Utils.editando = false
                 const data = await dataManager.loadData();
                 window.lovePage.loadGallery(data.gallery);
-                const message = itemId ? '¡Foto actualizada con amor! 💕' : '¡Nueva foto agregada con amor! 💕';
+                const message = itemId ? '¡Recuerdo actualizado con amor! 💕' : '¡Nuevo recuerdo agregado con amor! 💕';
                 await Utils.showSpecialNotification(message);
                 const modal = document.getElementById('allGalleryModal');
                 if (modal.classList.contains('active')) {
@@ -1017,11 +1052,11 @@ class Utils {
                 }
                 visualEffects.createHeartExplosion(window.innerWidth / 2, window.innerHeight / 2);
             } else {
-                await Utils.showSpecialNotification('Error al guardar la foto 💔');
+                await Utils.showSpecialNotification('Error al guardar el recuerdo 💔');
             }
         } catch (error) {
             console.error('Error guardando gallery event:', error);
-            await Utils.showSpecialNotification('Error al guardar la foto 💔');
+            await Utils.showSpecialNotification('Error al guardar el recuerdo 💔');
         }
     }
 
@@ -1034,7 +1069,7 @@ class Utils {
 
             
             if (!item) {
-                await Utils.showSpecialNotification('No se encontró la foto 💔');
+                await Utils.showSpecialNotification('No se encontró el recuerdo 💔');
                 return;
             }
             
@@ -1042,20 +1077,30 @@ class Utils {
             document.getElementById('galleryItemId').value = item.id;
             document.getElementById('galleryTitle').value = item.title;
             document.getElementById('galleryDescription').value = item.description;
-            document.getElementById('galleryImage').value = item.image || '';
             document.getElementById('galleryDate').value = item.date.split('T')[0];
 
-            // Mostrar imagen actual si existe
-            if (item.image) {
-                document.getElementById('currentImagePreview').style.display = 'block';
-                document.getElementById('galleryImagePreview').src = item.image;
+            // Manejar múltiples imágenes
+            const existingImages = item.images || (item.image ? [item.image] : []);
+            document.getElementById('galleryExistingImages').value = JSON.stringify(existingImages);
+
+            // Mostrar imágenes actuales si existen
+            const currentImagesContainer = document.getElementById('currentImagesPreview');
+            if (existingImages.length > 0) {
+                currentImagesContainer.style.display = 'block';
+                currentImagesContainer.innerHTML = existingImages.map((imgUrl, index) => `
+                    <div class="existing-image-item">
+                        <img src="${imgUrl}" alt="Imagen ${index + 1}">
+                        <button type="button" class="remove-image-btn" onclick="Utils.removeExistingImage(${index})" title="Eliminar imagen">✕</button>
+                    </div>
+                `).join('');
             } else {
-                document.getElementById('currentImagePreview').style.display = 'none';
+                currentImagesContainer.style.display = 'none';
+                currentImagesContainer.innerHTML = '';
             }
             
             // Actualizar título del modal y botones
-            document.getElementById('galleryModalTitle').textContent = '✏️ Editar Foto';
-            document.getElementById('gallerySaveBtn').textContent = '💾 Actualizar Foto';
+            document.getElementById('galleryModalTitle').textContent = '✏️ Editar Recuerdo';
+            document.getElementById('gallerySaveBtn').textContent = '💾 Actualizar Recuerdo';
             document.getElementById('galleryDeleteBtn').style.display = 'inline-block';
             Utils.editando = true;
 
@@ -1065,7 +1110,28 @@ class Utils {
             
         } catch (error) {
             console.error('Error editando gallery item:', error);
-            await Utils.showSpecialNotification('Error al cargar la foto 💔');
+            await Utils.showSpecialNotification('Error al cargar el recuerdo 💔');
+        }
+    }
+
+    // Eliminar imagen existente del recuerdo
+    static removeExistingImage(index) {
+        const existingImages = JSON.parse(document.getElementById('galleryExistingImages').value);
+        existingImages.splice(index, 1);
+        document.getElementById('galleryExistingImages').value = JSON.stringify(existingImages);
+        
+        // Actualizar preview
+        const currentImagesContainer = document.getElementById('currentImagesPreview');
+        if (existingImages.length > 0) {
+            currentImagesContainer.innerHTML = existingImages.map((imgUrl, newIndex) => `
+                <div class="existing-image-item">
+                    <img src="${imgUrl}" alt="Imagen ${newIndex + 1}">
+                    <button type="button" class="remove-image-btn" onclick="Utils.removeExistingImage(${newIndex})" title="Eliminar imagen">✕</button>
+                </div>
+            `).join('');
+        } else {
+            currentImagesContainer.style.display = 'none';
+            currentImagesContainer.innerHTML = '';
         }
     }
 

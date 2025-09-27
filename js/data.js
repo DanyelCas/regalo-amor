@@ -82,42 +82,42 @@ class DataManager {
                     id: '1',
                     title: 'Nuestra primera foto juntos',
                     description: 'Agrega aquí tu primera foto juntos',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 },
                 {
                     id: '2',
                     title: 'Un momento especial',
                     description: 'Agrega aquí un momento especial',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 },
                 {
                     id: '3',
                     title: 'Una aventura juntos',
                     description: 'Agrega aquí una aventura juntos',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 },
                 {
                     id: '4',
                     title: 'Un momento romántico',
                     description: 'Agrega aquí un momento romántico',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 },
                 {
                     id: '5',
                     title: 'Una celebración',
                     description: 'Agrega aquí una celebración',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 },
                 {
                     id: '6',
                     title: 'El momento más reciente',
                     description: 'Agrega aquí el momento más reciente',
-                    image: null,
+                    images: [], // Cambio: ahora es un array de imágenes
                     date: new Date().toISOString()
                 }
             ],
@@ -338,7 +338,21 @@ class DataManager {
                 return this.defaultData.gallery;
             }
 
-            return data || this.defaultData.gallery;
+            // Convertir datos antiguos al nuevo formato si es necesario
+            const processedData = (data || this.defaultData.gallery).map(item => {
+                // Si tiene 'image' pero no 'images', convertir al nuevo formato
+                if (item.image && !item.images) {
+                    item.images = [item.image];
+                    delete item.image;
+                }
+                // Si no tiene ni 'image' ni 'images', inicializar como array vacío
+                if (!item.images) {
+                    item.images = [];
+                }
+                return item;
+            });
+
+            return processedData;
         } catch (error) {
             console.error('Error en loadGallery:', error);
             return this.defaultData.gallery;
@@ -520,9 +534,14 @@ class DataManager {
             const galleryItem = {
                 title: photo.title,
                 description: photo.description,
-                image: photo.image,
+                images: photo.images || (photo.image ? [photo.image] : []), // Soporte para múltiples imágenes
                 date: photo.date
             };
+
+            // Mantener compatibilidad: también guardar la primera imagen en la columna 'image'
+            if (galleryItem.images && galleryItem.images.length > 0) {
+                galleryItem.image = galleryItem.images[0];
+            }
 
             const { error } = await this.supabase
                 .from('gallery')
@@ -543,6 +562,16 @@ class DataManager {
     // Actualizar foto de la galería
     async updateGalleryPhoto(id, updates) {
         try {
+            // Si se está actualizando con imágenes, asegurar que sea un array
+            if (updates.images) {
+                updates.images = Array.isArray(updates.images) ? updates.images : [updates.images];
+                
+                // Mantener compatibilidad: también actualizar la primera imagen en la columna 'image'
+                if (updates.images.length > 0) {
+                    updates.image = updates.images[0];
+                }
+            }
+            
             const { error } = await this.supabase
                 .from('gallery')
                 .update(updates)

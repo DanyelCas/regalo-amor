@@ -51,10 +51,14 @@ CREATE TABLE IF NOT EXISTS gallery (
     title TEXT NOT NULL,
     description TEXT,
     image TEXT,
+    images TEXT[] DEFAULT '{}',
     date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Agregar columna images si no existe (para bases de datos existentes)
+ALTER TABLE gallery ADD COLUMN IF NOT EXISTS images TEXT[] DEFAULT '{}';
 
 -- Crear tabla de sugerencias
 CREATE TABLE IF NOT EXISTS suggestions (

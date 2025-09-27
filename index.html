@@ -328,35 +328,40 @@
         </div>
     </div>
 
-    <!-- Formulario para agregar/editar foto de galería -->
+    <!-- Formulario para agregar/editar recuerdo de galería -->
     <div class="modal-overlay" id="galleryModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="galleryModalTitle">📸 Agregar Nueva Foto</h3>
+                <h3 id="galleryModalTitle">📸 Agregar Nuevo Recuerdo</h3>
                 <button class="close-modal" onclick="Utils.closeGalleryModal()">✕</button>
             </div>
             <div class="modal-body">
                 <form id="addGalleryForm">
-                    <div class="form-group" id="currentImagePreview" style="display:none;">
-                        <label>📷 Imagen actual:</label>
-                        <img id="galleryImagePreview" src="" style="max-width: 100%; border-radius: 8px;">
+                    <!-- Imágenes existentes (solo al editar) -->
+                    <div class="form-group" id="currentImagesPreview" style="display:none;">
+                        <label>📷 Imágenes actuales:</label>
+                        <div class="existing-images-grid">
+                            <!-- Las imágenes se cargarán dinámicamente aquí -->
+                        </div>
                     </div>
+                    
                     <input type="hidden" id="galleryItemId">
-                    <input type="hidden" id="galleryImage">
+                    <input type="hidden" id="galleryExistingImages" value="[]">
+                    
                     <div class="form-group">
                         <label for="galleryTitle">📝 Título:</label>
-                        <input type="text" id="galleryTitle" placeholder="Ej: Nuestra primera foto juntos" required>
+                        <input type="text" id="galleryTitle" placeholder="Ej: Nuestro primer viaje juntos" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="galleryDescription">💭 Descripción:</label>
-                        <textarea id="galleryDescription" placeholder="Describe esta foto especial..." required></textarea>
+                        <textarea id="galleryDescription" placeholder="Describe este recuerdo especial..." required></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="galleryImageFile">🖼️ Imagen:</label>
-                        <input type="file" id="galleryImageFile" accept="image/*">
-                        <small>Selecciona una imagen para subir</small>
+                        <label for="galleryImageFile">🖼️ Imágenes:</label>
+                        <input type="file" id="galleryImageFile" accept="image/*" multiple>
+                        <small>Selecciona una o más imágenes para subir (mantén presionado Ctrl/Cmd para seleccionar múltiples)</small>
                     </div>
                     
                     <div class="form-group">
@@ -369,7 +374,7 @@
                             ❌ Cancelar
                         </button>
                         <button type="submit" class="save-btn" id="gallerySaveBtn">
-                            💾 Guardar Foto
+                            💾 Guardar Recuerdo
                         </button>
                         <button type="button" class="delete-btn" id="galleryDeleteBtn" style="display: none;" onclick="Utils.deleteGalleryItem()">
                             🗑️ Eliminar
