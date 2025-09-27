@@ -340,7 +340,7 @@ class LovePage {
                 const imageCount = item.images ? item.images.length : 0;
                 
                 slide.innerHTML = `
-                    <div class="gallery-item" onclick="LovePage.expandMemory('${item.id}')">
+                    <div class="gallery-item" onclick="LovePage.expandMemory('${item.id}', 'carousel')">
                         <div class="gallery-image">
                             ${firstImage ? `<img src="${firstImage}" alt="${item.title}">` : 
                             `<div class="image-placeholder"><span>📸</span><p>Agregar fotos</p></div>`}
@@ -426,7 +426,7 @@ class LovePage {
             let imageHtml = '';
             if (imageCount > 1) {
                 imageHtml = `
-                    <div class="mini-carousel-container" onclick="LovePage.expandMemory('${item.id}')">
+                    <div class="mini-carousel-container" onclick="LovePage.expandMemory('${item.id}', 'allModal')">
                         <div class="mini-carousel" id="miniCarousel-${item.id}">
                             ${images.map((img, index) => `
                                 <div class="mini-carousel-slide ${index === 0 ? 'active' : ''}">
@@ -443,13 +443,13 @@ class LovePage {
                 `;
             } else if (imageCount === 1) {
                 imageHtml = `
-                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}')">
+                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}', 'allModal')">
                         <img src="${images[0]}" alt="${item.title}">
                     </div>
                 `;
             } else {
                 imageHtml = `
-                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}')">
+                    <div class="gallery-image-all" onclick="LovePage.expandMemory('${item.id}', 'allModal')">
                         <div class="image-placeholder-all"><span>📸</span><p>Agregar fotos</p></div>
                     </div>
                 `;
@@ -518,155 +518,209 @@ class LovePage {
         });
     }
 
-    // Expandir recuerdo y mostrar carrusel de fotos
-    static expandMemory(itemId) {
+    // Expandir recuerdo y mostrar vista de pantalla completa
+    static expandMemory(itemId, source = 'carousel') {
         const item = window.lovePage.galleryItems.find(i => i.id == itemId);
-        if (!item || !item.images || item.images.length === 0) {
+        if (!item) {
+            Utils.showSpecialNotification('Recuerdo no encontrado 💔');
+            return;
+        }
+
+        const images = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+        if (images.length === 0) {
             Utils.showSpecialNotification('Este recuerdo no tiene fotos aún 💔');
             return;
         }
 
-        // Crear modal de expansión si no existe
-        let expandModal = document.getElementById('expandMemoryModal');
-        if (!expandModal) {
-            expandModal = document.createElement('div');
-            expandModal.id = 'expandMemoryModal';
-            expandModal.className = 'modal-overlay';
-            expandModal.innerHTML = `
-                <div class="modal-content expand-modal">
-                    <div class="modal-header">
-                        <h3 id="expandMemoryTitle">${item.title}</h3>
-                        <button class="close-modal" onclick="LovePage.closeExpandMemory()">✕</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="memory-carousel-container">
-                            <div class="memory-carousel" id="memoryCarousel">
-                                <!-- Las imágenes se cargarán aquí -->
-                            </div>
-                            <div class="carousel-controls">
-                                <button class="carousel-btn prev-btn" onclick="LovePage.prevMemoryPhoto()">❮</button>
-                                <button class="carousel-btn next-btn" onclick="LovePage.nextMemoryPhoto()">❯</button>
-                            </div>
-                            <div class="carousel-indicators" id="carouselIndicators">
-                                <!-- Los indicadores se generarán aquí -->
-                            </div>
-                            <div class="photo-info" id="photoInfo">Foto 1 de ${item.images.length}</div>
-                        </div>
-                        <div class="memory-info">
-                            <p id="expandMemoryDescription">${item.description}</p>
-                            <span id="expandMemoryDate">${new Date(item.date).toLocaleDateString('es-ES')}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(expandModal);
-        }
+        // Guardar contexto de navegación
+        window.currentFullscreenMemoryId = itemId;
+        window.fullscreenMemorySource = source; // 'carousel', 'allModal', etc.
+        window.currentFullscreenIndex = 0;
+        window.currentFullscreenImages = images;
 
-        // Actualizar contenido del modal
-        document.getElementById('expandMemoryTitle').textContent = item.title;
-        document.getElementById('expandMemoryDescription').textContent = item.description;
-        document.getElementById('expandMemoryDate').textContent = new Date(item.date).toLocaleDateString('es-ES');
+        // Actualizar contenido
+        LovePage.updateFullscreenMemoryContent(item, images);
 
-        // Configurar carrusel
-        window.currentMemoryItem = item;
-        window.currentMemoryIndex = 0;
-        LovePage.updateMemoryCarousel();
-
-        // Mostrar modal
-        expandModal.classList.add('active');
+        // Mostrar vista de pantalla completa
+        const overlay = document.getElementById('fullscreenMemoryOverlay');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevenir scroll del body
 
         // Agregar soporte para navegación con teclado
-        document.addEventListener('keydown', LovePage.handleCarouselKeyboard);
+        document.addEventListener('keydown', LovePage.handleFullscreenKeyboard);
     }
 
-    // Actualizar carrusel de fotos del recuerdo
-    static updateMemoryCarousel() {
-        const carousel = document.getElementById('memoryCarousel');
-        const indicators = document.getElementById('carouselIndicators');
-        const photoInfo = document.getElementById('photoInfo');
-        const item = window.currentMemoryItem;
-        const currentIndex = window.currentMemoryIndex;
+    // Actualizar contenido de la vista de pantalla completa
+    static updateFullscreenMemoryContent(item, images) {
+        // Actualizar títulos
+        document.getElementById('fullscreenMemoryTitle').textContent = item.title;
+        document.getElementById('fullscreenMemoryTitleSidebar').textContent = item.title;
+        
+        // Actualizar descripción
+        document.getElementById('fullscreenMemoryDescription').textContent = item.description;
+        
+        // Actualizar fechas
+        const date = new Date(item.date);
+        document.getElementById('fullscreenMemoryDate').textContent = date.toLocaleDateString('es-ES');
+        document.getElementById('fullscreenMemoryDateFormatted').textContent = LovePage.getRelativeDate(date);
+        
+        // Actualizar estadísticas
+        document.getElementById('fullscreenPhotoCount').textContent = `${images.length} ${images.length === 1 ? 'foto' : 'fotos'}`;
+        
+        // Actualizar carrusel
+        LovePage.updateFullscreenCarousel(images);
+        
+        // Actualizar contador de fotos
+        LovePage.updateFullscreenPhotoCounter();
+    }
 
-        if (!carousel || !item) return;
+    // Actualizar carrusel de pantalla completa
+    static updateFullscreenCarousel(images) {
+        const carousel = document.getElementById('fullscreenCarousel');
+        const indicators = document.getElementById('fullscreenCarouselIndicators');
+        const currentIndex = window.currentFullscreenIndex || 0;
+
+        if (!carousel) return;
 
         // Limpiar carrusel
         carousel.innerHTML = '';
         indicators.innerHTML = '';
 
         // Crear slides de imágenes
-        item.images.forEach((imageUrl, index) => {
+        images.forEach((imageUrl, index) => {
             const slide = document.createElement('div');
-            slide.className = `carousel-slide ${index === currentIndex ? 'active' : ''}`;
-            slide.innerHTML = `<img src="${imageUrl}" alt="${item.title} - Foto ${index + 1}">`;
+            slide.className = `fullscreen-carousel-slide ${index === currentIndex ? 'active' : ''}`;
+            slide.innerHTML = `<img src="${imageUrl}" alt="Foto ${index + 1}">`;
             carousel.appendChild(slide);
 
             // Crear indicador
             const indicator = document.createElement('button');
-            indicator.className = `carousel-indicator ${index === currentIndex ? 'active' : ''}`;
-            indicator.onclick = () => LovePage.goToMemoryPhoto(index);
+            indicator.className = `fullscreen-carousel-indicator ${index === currentIndex ? 'active' : ''}`;
+            indicator.onclick = () => LovePage.goToFullscreenPhoto(index);
             indicators.appendChild(indicator);
         });
+    }
 
-        // Actualizar información de la foto actual
-        if (photoInfo) {
-            photoInfo.textContent = `Foto ${currentIndex + 1} de ${item.images.length}`;
+    // Actualizar contador de fotos
+    static updateFullscreenPhotoCounter() {
+        const counter = document.getElementById('fullscreenPhotoCounter');
+        const currentIndex = window.currentFullscreenIndex || 0;
+        const totalImages = window.currentFullscreenImages ? window.currentFullscreenImages.length : 0;
+        
+        if (counter) {
+            counter.textContent = `Foto ${currentIndex + 1} de ${totalImages}`;
         }
     }
 
-    // Navegar a la foto anterior
-    static prevMemoryPhoto() {
-        const item = window.currentMemoryItem;
-        if (!item || item.images.length <= 1) return;
+    // Navegar a foto anterior en pantalla completa
+    static prevFullscreenPhoto() {
+        const images = window.currentFullscreenImages;
+        if (!images || images.length <= 1) return;
         
-        window.currentMemoryIndex = (window.currentMemoryIndex - 1 + item.images.length) % item.images.length;
-        LovePage.updateMemoryCarousel();
+        window.currentFullscreenIndex = (window.currentFullscreenIndex - 1 + images.length) % images.length;
+        LovePage.updateFullscreenCarousel(images);
+        LovePage.updateFullscreenPhotoCounter();
     }
 
-    // Navegar a la foto siguiente
-    static nextMemoryPhoto() {
-        const item = window.currentMemoryItem;
-        if (!item || item.images.length <= 1) return;
+    // Navegar a foto siguiente en pantalla completa
+    static nextFullscreenPhoto() {
+        const images = window.currentFullscreenImages;
+        if (!images || images.length <= 1) return;
         
-        window.currentMemoryIndex = (window.currentMemoryIndex + 1) % item.images.length;
-        LovePage.updateMemoryCarousel();
+        window.currentFullscreenIndex = (window.currentFullscreenIndex + 1) % images.length;
+        LovePage.updateFullscreenCarousel(images);
+        LovePage.updateFullscreenPhotoCounter();
     }
 
-    // Ir a una foto específica
-    static goToMemoryPhoto(index) {
-        window.currentMemoryIndex = index;
-        LovePage.updateMemoryCarousel();
+    // Ir a una foto específica en pantalla completa
+    static goToFullscreenPhoto(index) {
+        window.currentFullscreenIndex = index;
+        LovePage.updateFullscreenCarousel(window.currentFullscreenImages);
+        LovePage.updateFullscreenPhotoCounter();
     }
 
-    // Cerrar modal de expansión
-    static closeExpandMemory() {
-        const modal = document.getElementById('expandMemoryModal');
-        if (modal) {
-            modal.classList.remove('active');
-            // Remover listener de teclado
-            document.removeEventListener('keydown', LovePage.handleCarouselKeyboard);
+    // Cerrar vista de pantalla completa
+    static closeFullscreenMemory(skipNavigation = false) {
+        const overlay = document.getElementById('fullscreenMemoryOverlay');
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restaurar scroll del body
+        
+        // Remover listener de teclado
+        document.removeEventListener('keydown', LovePage.handleFullscreenKeyboard);
+        
+        // Navegación contextual: volver al origen (solo si no se está editando)
+        if (!skipNavigation) {
+            const source = window.fullscreenMemorySource;
+            if (source === 'allModal') {
+                // Si vino del modal "Ver todos los recuerdos", volver a ese modal
+                const allModal = document.getElementById('allGalleryModal');
+                if (allModal) {
+                    allModal.classList.add('active');
+                }
+            }
+            // Si vino del carrusel principal, simplemente cerrar (ya está en la página principal)
         }
+        
+        // Limpiar variables globales
+        window.currentFullscreenMemoryId = null;
+        window.fullscreenMemorySource = null;
+        window.currentFullscreenIndex = 0;
+        window.currentFullscreenImages = null;
     }
 
-    // Manejar navegación con teclado en el carrusel
-    static handleCarouselKeyboard(event) {
-        const modal = document.getElementById('expandMemoryModal');
-        if (!modal || !modal.classList.contains('active')) return;
+    // Manejar navegación con teclado en pantalla completa
+    static handleFullscreenKeyboard(event) {
+        const overlay = document.getElementById('fullscreenMemoryOverlay');
+        if (!overlay || !overlay.classList.contains('active')) return;
 
         switch(event.key) {
             case 'ArrowLeft':
                 event.preventDefault();
-                LovePage.prevMemoryPhoto();
+                LovePage.prevFullscreenPhoto();
                 break;
             case 'ArrowRight':
                 event.preventDefault();
-                LovePage.nextMemoryPhoto();
+                LovePage.nextFullscreenPhoto();
                 break;
             case 'Escape':
                 event.preventDefault();
-                LovePage.closeExpandMemory();
+                LovePage.closeFullscreenMemory();
                 break;
         }
     }
+
+    // Obtener fecha relativa (ej: "Hace 2 días")
+    static getRelativeDate(date) {
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Hoy';
+        if (diffDays === 1) return 'Ayer';
+        if (diffDays < 7) return `Hace ${diffDays} días`;
+        if (diffDays < 30) return `Hace ${Math.ceil(diffDays / 7)} semanas`;
+        if (diffDays < 365) return `Hace ${Math.ceil(diffDays / 30)} meses`;
+        return `Hace ${Math.ceil(diffDays / 365)} años`;
+    }
+
+    // Editar recuerdo desde la vista de pantalla completa
+    static editFromFullscreen() {
+        const memoryId = window.currentFullscreenMemoryId;
+        if (!memoryId) {
+            Utils.showSpecialNotification('No se pudo identificar el recuerdo 💔');
+            return;
+        }
+
+        // Cerrar la vista de pantalla completa sin navegación contextual
+        LovePage.closeFullscreenMemory(true);
+        
+        // Abrir el formulario de edición después de un pequeño delay
+        // para asegurar que la vista se cierre completamente
+        setTimeout(() => {
+            Utils.editGalleryItem(memoryId);
+        }, 300);
+    }
+
 
     // Inicializar animaciones
     initializeAnimations() {

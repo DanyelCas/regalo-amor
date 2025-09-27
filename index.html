@@ -131,6 +131,81 @@
         </div>
     </div>
 
+    <!-- Vista de pantalla completa para recuerdos (estilo Facebook) -->
+    <div class="fullscreen-memory-overlay" id="fullscreenMemoryOverlay">
+        <div class="fullscreen-memory-container">
+            <!-- Header con navegación -->
+            <div class="fullscreen-header">
+                <button class="back-btn" id="fullscreenBackBtn" onclick="LovePage.closeFullscreenMemory()">
+                    <span class="back-arrow">←</span>
+                    <span class="back-text">Atrás</span>
+                </button>
+                <h2 id="fullscreenMemoryTitle">Título del Recuerdo</h2>
+                <div class="header-actions">
+                    <button class="action-btn" onclick="LovePage.editFromFullscreen()" title="Editar recuerdo">
+                        ✏️ Editar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="fullscreen-content">
+                <!-- Carrusel de imágenes (lado izquierdo) -->
+                <div class="fullscreen-carousel-container">
+                    <div class="fullscreen-carousel" id="fullscreenCarousel">
+                        <!-- Las imágenes se cargarán aquí -->
+                    </div>
+                    
+                    <!-- Controles del carrusel -->
+                    <div class="fullscreen-carousel-controls">
+                        <button class="carousel-btn prev-btn" onclick="LovePage.prevFullscreenPhoto()">❮</button>
+                        <button class="carousel-btn next-btn" onclick="LovePage.nextFullscreenPhoto()">❯</button>
+                    </div>
+                    
+                    <!-- Indicadores -->
+                    <div class="fullscreen-carousel-indicators" id="fullscreenCarouselIndicators">
+                        <!-- Los indicadores se generarán aquí -->
+                    </div>
+                    
+                    <!-- Información de la foto actual -->
+                    <div class="photo-counter" id="fullscreenPhotoCounter">Foto 1 de 3</div>
+                </div>
+
+                <!-- Sidebar con información del recuerdo (lado derecho) -->
+                <div class="fullscreen-sidebar">
+                    <div class="memory-info-card">
+                        <div class="memory-header">
+                            <h3 id="fullscreenMemoryTitleSidebar">Título del Recuerdo</h3>
+                            <span class="memory-date" id="fullscreenMemoryDate">Fecha</span>
+                        </div>
+                        
+                        <div class="memory-description">
+                            <p id="fullscreenMemoryDescription">Descripción del recuerdo...</p>
+                        </div>
+                        
+                        <div class="memory-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">📸</span>
+                                <span class="stat-text" id="fullscreenPhotoCount">3 fotos</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">📅</span>
+                                <span class="stat-text" id="fullscreenMemoryDateFormatted">Hace 2 días</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Acciones del recuerdo -->
+                    <div class="memory-actions">
+                        <button class="action-btn primary" onclick="LovePage.editFromFullscreen()">
+                            ✏️ Editar Recuerdo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mensajes románticos aleatorios -->
     <section class="messages-section">
         <div class="message-container">
