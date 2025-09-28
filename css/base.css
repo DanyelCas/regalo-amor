@@ -49,7 +49,6 @@ body::before {
     background-repeat: no-repeat, no-repeat;
     opacity: 0.4;
     z-index: -1;
-    animation: backgroundFloat 20s ease-in-out infinite;
 }
 
 /* Elementos dinámicos de flores */
@@ -63,7 +62,6 @@ body::before {
     pointer-events: none;
     z-index: 1;
     opacity: 0.8;
-    animation: flowerFloat 8s ease-in-out infinite;
 }
 
 .floating-flower.sunflower {
@@ -97,13 +95,11 @@ body::before {
 
 .side-flower.left {
     left: 20px;
-    animation: floatTulipSide 12s ease-in-out infinite;
 }
 
 .side-flower.right {
     right: 20px;
     transform: rotate(-15deg);
-    animation: floatTulipSideRight 12s ease-in-out infinite;
 }
 
 .side-flower.tulip-left {
@@ -128,7 +124,6 @@ h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    animation: titleGlow 3s ease-in-out infinite alternate;
 }
 
 h2 {

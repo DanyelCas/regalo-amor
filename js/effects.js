@@ -21,10 +21,6 @@ class VisualEffects {
                 height: ${size}px;
                 background: rgba(255, 107, 107, ${Math.random() * 0.5 + 0.3});
                 border-radius: 50%;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                animation: float-particle ${duration}s linear infinite;
-                animation-delay: ${Math.random() * 5}s;
             `;
             particlesContainer.appendChild(particle);
         }
@@ -88,8 +84,6 @@ class VisualEffects {
                 opacity: 0.9;
                 z-index: 2;
                 pointer-events: none;
-                animation: floatTulipSide 12s ease-in-out infinite;
-                animation-delay: ${1 + i * 1.5}s;
             `;
             
             container.appendChild(tulip);
@@ -123,8 +117,6 @@ class VisualEffects {
                 opacity: 0.9;
                 z-index: 2;
                 pointer-events: none;
-                animation: floatTulipSideRight 12s ease-in-out infinite;
-                animation-delay: ${1 + i * 1.5}s;
                 transform: rotate(-15deg);
             `;
             
@@ -151,7 +143,6 @@ class VisualEffects {
             opacity: 0.8;
             z-index: 1;
             pointer-events: none;
-            animation: flowerFloat ${duration}s ease-in-out infinite;
             animation-delay: ${Math.random() * 5}s;
         `;
         
