@@ -88,6 +88,7 @@
 
 .marker-icon {
     font-size: 1.5rem;
+    animation: markerGlow 3s ease-in-out infinite;
 }
 
 .timeline-date {
@@ -112,6 +113,7 @@
     border-radius: 20px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     position: relative;
+    animation: contentFloat 8s ease-in-out infinite;
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
