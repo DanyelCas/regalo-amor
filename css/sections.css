@@ -1397,9 +1397,7 @@
         grid-template-columns: 1fr;
         padding: 0 0.5rem;
     }
-    .gallery-image img {
-        height: 180px;
-    }
+    
     
     .love-letter-section {
         margin: 2rem 1rem;
