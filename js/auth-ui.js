@@ -353,7 +353,7 @@ class AuthUI {
                 danielButtonSend.style.display = "none";
                 betziTextarea.style.display = "none";
                 betziButtonSend.style.display = "none";
-                betziSuggestionCount.style.display = "none";
+                betziSuggestionCount.style.display = "none";  
                 
                 // Mostrar prompt de login
                 if (loginPrompt) {
