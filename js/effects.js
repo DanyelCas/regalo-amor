@@ -186,8 +186,6 @@ class VisualEffects {
                 background: linear-gradient(to bottom, rgba(255, 215, 0, 0.8), rgba(255, 193, 7, 0.4));
                 left: ${left}%;
                 top: -20px;
-                animation: rain-fall ${duration}s linear infinite;
-                animation-delay: ${Math.random() * 2}s;
             `;
             
             container.appendChild(drop);
@@ -228,9 +226,7 @@ class VisualEffects {
                 background: ${color};
                 left: ${left}%;
                 top: -10px;
-                animation: confetti-fall ${duration}s linear infinite;
-                animation-delay: ${Math.random() * 2}s;
-                transform: rotate(${Math.random() * 360}deg);
+
             `;
             
             container.appendChild(piece);
@@ -269,9 +265,7 @@ class VisualEffects {
                 left: ${x}px;
                 top: ${y}px;
                 font-size: ${size}px;
-                animation: heart-explosion ${duration}s ease-out forwards;
-                animation-delay: ${Math.random() * 0.3}s;
-                transform: translate(-50%, -50%);
+
                 z-index: 1000;
             `;
             
