@@ -1213,7 +1213,7 @@
 /* Contador de fotos */
 .photo-counter {
   position: absolute;
-  bottom: 5rem;
+  bottom: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
   color: white;

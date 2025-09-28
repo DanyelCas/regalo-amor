@@ -562,10 +562,8 @@ class LovePage {
         // Actualizar fechas
         const date = new Date(item.date);
         document.getElementById('fullscreenMemoryDate').textContent = date.toLocaleDateString('es-ES');
-        document.getElementById('fullscreenMemoryDateFormatted').textContent = LovePage.getRelativeDate(date);
         
         // Actualizar estadísticas
-        document.getElementById('fullscreenPhotoCount').textContent = `${images.length} ${images.length === 1 ? 'foto' : 'fotos'}`;
         
         // Actualizar carrusel
         LovePage.updateFullscreenCarousel(images);
