@@ -265,12 +265,15 @@ class AuthUI {
     updateTimelinePermissions() {
         const addTimelineBtn = document.querySelector('.add-timeline-btn');
         const timelineItems = document.querySelectorAll('.timeline-item');
+        const idEditFromFullscreen = document.getElementById('idEditFromFullscreen');
         
         if (addTimelineBtn) {
             if (authManager.canManageTimeline()) {
                 addTimelineBtn.style.display = 'block';
+                idEditFromFullscreen.style.display = 'block';
             } else {
                 addTimelineBtn.style.display = 'none';
+                idEditFromFullscreen.style.display = 'none';
             }
         }
 

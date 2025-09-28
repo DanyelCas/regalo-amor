@@ -164,7 +164,6 @@ class AuthManager {
                 this.currentUser = userData.usuario;
                 this.userData = userData;
                 this.isAuthenticated = true;
-                console.log('Usuario cargado desde localStorage:', this.currentUser);
             }
         } catch (error) {
             console.error('Error cargando usuario:', error);
@@ -237,10 +236,6 @@ class AuthManager {
 
     // Iniciar sesión (simplificado)
     async login(usuario, password) {
-        console.log('Iniciando sesión para usuario:', usuario);
-        console.log('Contraseña proporcionada:', password);
-        console.log('Hashed password:', this.md5(password));
-        
         try {
             await this.waitForSupabase();
 
