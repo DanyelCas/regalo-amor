@@ -14,6 +14,7 @@ header {
 .heart {
     font-size: 2rem;
     color: var(--danger-color);
+    animation: heartbeat 1.5s ease-in-out infinite;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -98,6 +99,7 @@ header {
     position: absolute;
     top: 15px;
     right: -30px;
+    animation: heartbeat 1.5s infinite;
   }
 
   .subtitle{
