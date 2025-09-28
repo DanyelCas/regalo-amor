@@ -627,20 +627,30 @@ class Utils {
     }
 
     static addSuggestionToList(person, suggestion) {
+        console.log("-----------------");
+        console.log(authManager.getCurrentUserRealName());
         const container = document.getElementById(`${person}Suggestions`);
         if (!container) return;
 
         const suggestionElement = document.createElement('div');
         suggestionElement.className = 'suggestion-item';
-        suggestionElement.innerHTML = `
-            <div class="suggestion-sender">💌 De: ${suggestion.sender}</div>
-            <div class="suggestion-text">${this.escapeHtml(suggestion.text)}</div>
-            <div class="suggestion-date">${new Date(suggestion.date).toLocaleString('es-ES')}</div>
+        let textButton = '';
+        if(authManager.getCurrentUserRealName() != 'Invitado'){
+            textButton = `
             <div class="suggestion-actions">
                 <button class="reply-btn" onclick="Utils.showReplyForm('${suggestion.id}', '${person}')">
                     💬 Responder
                 </button>
             </div>
+            <div class="replies-container" id="replies-${suggestion.id}"></div>
+        `;
+        }
+
+        suggestionElement.innerHTML = `
+            <div class="suggestion-sender">💌 De: ${suggestion.sender}</div>
+            <div class="suggestion-text">${this.escapeHtml(suggestion.text)}</div>
+            <div class="suggestion-date">${new Date(suggestion.date).toLocaleString('es-ES')}</div>
+            ${textButton}
             <div class="replies-container" id="replies-${suggestion.id}"></div>
         `;
 
@@ -752,7 +762,7 @@ class Utils {
 
         // Determinar quién está respondiendo
         const envia = authManager.getCurrentUserRealName();
-        const responderName = envia === 'foquito' ? 'Daniel' : 'Betzi';
+        const responderName = envia === 'foquito' ? 'Daniel' : 'amuletito'? 'Betzi' : '';
 
         try {
             // Guardar respuesta en el sistema de datos
