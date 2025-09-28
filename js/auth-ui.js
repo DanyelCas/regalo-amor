@@ -191,9 +191,13 @@ class AuthUI {
 
     // Cerrar sesión
     logout() {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión? 💔')) {
-            authManager.logout();
-        }
+        Utils.showRomanticConfirm(
+            'Cerrar sesión',
+            '¿Estás segura de querer cerrar sesión, mi caballita de mar?',
+            () => {
+                authManager.logout();
+            }
+        );
     }
 
     // Mostrar interfaz autenticada
@@ -227,7 +231,7 @@ class AuthUI {
                 animation: slideInRight 0.5s ease-out;
             `;
             welcomeMsg.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 5px;">👋 ¡Hola mi ${authManager.getCurrentUserRealName()}!</div>
+                <div style="font-weight: bold; margin-bottom: 5px;">👋 ¡Hola, mi ${authManager.getCurrentUserRealName()}!</div>
             `;
 
             // Agregar animación CSS
@@ -329,6 +333,10 @@ class AuthUI {
         const danielTextarea = document.getElementById('danielSuggestion');
         const betziTextarea = document.getElementById('betziSuggestion');
         const loginPrompt = document.getElementById('loginPrompt');
+        const betziButtonSend = document.getElementById('betziButtonSend');
+        const danielButtonSend = document.getElementById('danielButtonSend');
+        const danielSuggestionCount = document.getElementById('danielSuggestionCount');
+        const betziSuggestionCount = document.getElementById('betziSuggestionCount');
         
         if (danielTextarea && betziTextarea) {
             const role = authManager.getCurrentUserRole();
@@ -354,19 +362,26 @@ class AuthUI {
                 const canWriteDaniel = authManager.canWriteInMailbox('Daniel');
                 const canWriteBetzi = authManager.canWriteInMailbox('Betzi');
                 
-                danielTextarea.disabled = !canWriteDaniel;
+                danielTextarea.disabled = !canWriteDaniel;               
+                danielTextarea.style.display = canWriteDaniel ? "block" : "none";
+                danielSuggestionCount.style.display = canWriteDaniel ? "block" : "none";
+                danielButtonSend.style.display = canWriteDaniel ? "block" : "none";
                 betziTextarea.disabled = !canWriteBetzi;
+                betziTextarea.style.display = canWriteBetzi ? "block" : "none";
+                betziButtonSend.style.display = canWriteBetzi ? "block" : "none";
+                betziSuggestionCount.style.display = canWriteBetzi ? "block" : "none";
+                
                 
                 if (!canWriteDaniel) {
                     danielTextarea.placeholder = 'No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de Betzi 💕';
                 } else {
-                    danielTextarea.placeholder = 'Escribe aquí tu sugerencia, pensamiento o mensaje para Betzi... 💕';
+                    danielTextarea.placeholder = 'Escribe aquí tu sugerencia, pensamiento o mensaje para Daniel... 💕';
                 }
                 
                 if (!canWriteBetzi) {
-                    betziTextarea.placeholder = 'No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de Daniel 💕';
+                    betziTextarea.placeholder = 'No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de Betzi 💕';
                 } else {
-                    betziTextarea.placeholder = 'Escribe aquí tu sugerencia, pensamiento o mensaje para Daniel... 💕';
+                    betziTextarea.placeholder = 'Escribe aquí tu sugerencia, pensamiento o mensaje para Betzi... 💕';
                 }
             }
         }

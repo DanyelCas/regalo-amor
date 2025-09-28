@@ -27,7 +27,7 @@
 
 .typing-text {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     line-height: 1.8;
     color: var(--accent-color);
     text-align: justify;
@@ -41,8 +41,7 @@
 }
 
 .message-container {
-    max-width: 600px;
-    margin: 0 auto;
+    margin: 0 10px;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -52,7 +51,7 @@
 
 .message {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--accent-color);
     line-height: 1.6;
     animation: messageFade 4s ease-in-out infinite;
@@ -154,7 +153,7 @@
     border: none;
     border-radius: 10px;
     padding: 12px 28px;
-    font-size: 1rem;
+    font-size: 2rem;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 4px 16px rgba(56, 249, 215, 0.18);
@@ -376,6 +375,278 @@
   font-size: 0.9rem;
 }
 
+/* ========================================
+   FORMULARIOS Y BOTONES ROMÁNTICOS
+   ======================================== */
+
+/* Contenedor de formularios */
+.modal-content {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 50%, #ffeaa7 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(255, 193, 7, 0.2), 0 8px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+/* Campos de formulario románticos */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #8b4513;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #5d4e37;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 10px rgba(255, 215, 0, 0.1);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ffd700;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2), inset 0 2px 10px rgba(255, 215, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(139, 69, 19, 0.6);
+  font-style: italic;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(139, 69, 19, 0.7);
+  font-style: italic;
+}
+
+/* Botones románticos principales */
+.save-btn, .action-btn.primary {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+  color: #8b4513;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3), 0 3px 10px rgba(0, 0, 0, 0.1);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.save-btn::before, .action-btn.primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.save-btn:hover::before, .action-btn.primary:hover::before {
+  left: 100%;
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #ffed4e 0%, #ffd700 50%, #ffed4e 100%);
+}
+
+.save-btn:active, .action-btn.primary:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Botones secundarios románticos */
+.cancel-btn, .action-btn.secondary, .action-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 220, 0.9) 100%);
+  color: #8b4513;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+ .action-btn.secondary:hover, .action-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 248, 220, 1) 100%);
+  border-color: #ffd700;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+/* Botones de eliminación románticos */
+.delete-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff8e8e 0%, #ff6b6b 50%, #ff8e8e 100%);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+/* Botones pequeños románticos */
+.edit-btn {
+  background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(116, 185, 255, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+}
+
+/* Botón de agregar romántico */
+.add-btn {
+  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.add-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.add-btn:hover::before {
+  left: 100%;
+}
+
+.add-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 184, 148, 0.4);
+  background: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+}
+
+/* Botón "Ver todos" romántico */
+.show-all-btn {
+  background: linear-gradient(135deg, #e67e22 0%, #f5b971 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(253, 121, 168, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.show-all-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.show-all-btn:hover::before {
+  left: 100%;
+}
+
+.show-all-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(253, 121, 168, 0.4);
+  background: linear-gradient(135deg, #f5b971 0%, #e67e22 100%);
+}
+
+/* Botones de carrusel románticos */
+.carousel-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  transition: all 0.3s ease;
+  color: #8b4513;
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.15);
+  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
+}
+
 /* Estilos para el formulario de múltiples imágenes */
 .existing-images-grid {
   display: grid;
@@ -386,9 +657,15 @@
 
 .existing-image-item {
   position: relative;
-  border-radius: 8px;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.existing-image-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
 }
 
 .existing-image-item img {
@@ -401,23 +678,254 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  background: rgba(255, 0, 0, 0.8);
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
   color: white;
   border: none;
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
 .remove-image-btn:hover {
-  background: rgba(255, 0, 0, 1);
+  background: linear-gradient(135deg, #ff8e8e, #ff6b6b);
+  transform: scale(1.15);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+/* ========================================
+   NOTIFICACIONES ROMÁNTICAS
+   ======================================== */
+
+/* Contenedor de notificaciones */
+.romantic-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 350px;
+  max-width: 500px;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  z-index: 10000;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  font-family: 'Dancing Script', cursive;
+}
+
+.romantic-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.romantic-notification.hide {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Tipos de notificaciones románticas */
+.romantic-notification.success {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.95) 0%, rgba(255, 248, 220, 0.95) 100%);
+  border-color: rgba(255, 215, 0, 0.6);
+  color: #8b4513;
+}
+
+.romantic-notification.error {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.95) 0%, rgba(255, 142, 142, 0.95) 100%);
+  border-color: rgba(255, 107, 107, 0.6);
+  color: white;
+}
+
+.romantic-notification.warning {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.95) 0%, rgba(255, 235, 59, 0.95) 100%);
+  border-color: rgba(255, 193, 7, 0.6);
+  color: #8b4513;
+}
+
+.romantic-notification.info {
+  background: linear-gradient(135deg, rgba(116, 185, 255, 0.95) 0%, rgba(162, 155, 254, 0.95) 100%);
+  border-color: rgba(116, 185, 255, 0.6);
+  color: white;
+}
+
+/* Contenido de la notificación */
+.romantic-notification-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.romantic-notification-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.romantic-notification-text {
+  flex: 1;
+}
+
+.romantic-notification-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.romantic-notification-message {
+  font-size: 1.1rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Botón de cerrar romántico */
+.romantic-notification-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  color: inherit;
+}
+
+.romantic-notification-close:hover {
+  background: rgba(255, 255, 255, 0.5);
   transform: scale(1.1);
+}
+
+/* Modal de confirmación romántico */
+.romantic-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  backdrop-filter: blur(10px);
+}
+
+.romantic-modal {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 50%, #ffeaa7 100%);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  border-radius: 25px;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 25px 80px rgba(255, 193, 7, 0.3);
+  text-align: center;
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.romantic-modal.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.romantic-modal-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.romantic-modal-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8b4513;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.romantic-modal-message {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  color: #5d4e37;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.romantic-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.romantic-modal-btn {
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.romantic-modal-btn.confirm {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.romantic-modal-btn.confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.romantic-modal-btn.cancel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 220, 0.9) 100%);
+  color: #8b4513;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.romantic-modal-btn.cancel:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 248, 220, 1) 100%);
+  border-color: #ffd700;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+/* Animación de corazones para notificaciones de éxito */
+@keyframes heartFloat {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+.romantic-notification.hearts::after {
+  content: '💕💖💕💖';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  animation: heartFloat 2s ease-out infinite;
+  pointer-events: none;
 }
 
 /* Mini carruseles para el modal "Ver todos los recuerdos" */
@@ -837,7 +1345,7 @@
 
 .footer p {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.3rem;
+    font-size: 2.5rem;
     color: var(--accent-color);
     margin-bottom: 1rem;
 }

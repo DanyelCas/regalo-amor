@@ -64,35 +64,59 @@ class Utils {
         }
     }
 
-    // Mostrar notificación especial
-    static async showSpecialNotification(message = null) {
+    // Mostrar notificación romántica especial
+    static async showSpecialNotification(message = null, type = 'success') {
         try {
-            const config = await dataManager.loadConfig();
+            // Array de apodos románticos
+            const romanticNicknames = [
+                'mi amuletito especial',
+                'curita de mi corazón', 
+                'mi amorcito',
+                'mi vida',
+                'mi pinguinita',
+                'mi caballita de mar'
+            ];
+            
+            // Seleccionar apodo aleatorio
+            const randomNickname = romanticNicknames[Math.floor(Math.random() * romanticNicknames.length)];
+            
+            // Crear elemento de notificación romántica
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #ff6b6b, #f093fb);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 10000;
-                animation: slideInRight 0.5s ease-out;
-                font-family: 'Dancing Script', cursive;
-                font-size: 1.1rem;
+            notification.className = `romantic-notification ${type}`;
+            
+            // Iconos románticos por tipo
+            const icons = {
+                success: '💕',
+                error: '💔',
+                warning: '⚠️',
+                info: '💝'
+            };
+            
+            const finalMessage = message || (await dataManager.loadConfig()).messages?.notification || CONFIG.MESSAGES.NOTIFICATION;
+            
+            notification.innerHTML = `
+                <button class="romantic-notification-close" onclick="Utils.closeRomanticNotification(this)">×</button>
+                <div class="romantic-notification-content">
+                    <span class="romantic-notification-icon">${icons[type]}</span>
+                    <div class="romantic-notification-text">
+                        <div class="romantic-notification-title">${randomNickname.charAt(0).toUpperCase() + randomNickname.slice(1)}</div>
+                        <div class="romantic-notification-message">${finalMessage}</div>
+                    </div>
+                </div>
             `;
-            notification.textContent = message || config.messages?.notification || CONFIG.MESSAGES.NOTIFICATION;
-            
+
+            // Agregar al DOM
             document.body.appendChild(notification);
-            
+
+            // Animar entrada
             setTimeout(() => {
-                notification.style.animation = 'slideOutRight 0.5s ease-in forwards';
-                setTimeout(() => {
-                    notification.remove();
-                }, 500);
-            }, 3000);
+                notification.classList.add('show');
+            }, 100);
+
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                Utils.closeRomanticNotification(notification.querySelector('.romantic-notification-close'));
+            }, 5000);
         } catch (error) {
             console.error('Error mostrando notificación:', error);
             // Fallback a valor por defecto
@@ -122,6 +146,82 @@ class Utils {
                 }, 500);
             }, 3000);
         }
+    }
+
+    // Cerrar notificación romántica
+    static closeRomanticNotification(closeBtn) {
+        const notification = closeBtn.closest('.romantic-notification');
+        if (notification) {
+            notification.classList.add('hide');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 400);
+        }
+    }
+
+    // Mostrar confirmación romántica
+    static showRomanticConfirm(title, message, onConfirm, onCancel = null) {
+        // Array de apodos románticos
+        const romanticNicknames = [
+            'mi amuletito especial',
+            'curita de mi corazón', 
+            'mi amorcito',
+            'mi vida',
+            'mi pingüinita',
+            'mi caballita de mar'
+        ];
+        
+        const randomNickname = romanticNicknames[Math.floor(Math.random() * romanticNicknames.length)];
+        
+        // Crear modal de confirmación romántico
+        const modal = document.createElement('div');
+        modal.className = 'romantic-modal-overlay';
+        modal.innerHTML = `
+            <div class="romantic-modal">
+                <span class="romantic-modal-icon">💕</span>
+                <h3 class="romantic-modal-title">${title}</h3>
+                <p class="romantic-modal-message">${message}, ${randomNickname}</p>
+                <div class="romantic-modal-actions">
+                    <button class="romantic-modal-btn confirm" onclick="Utils.confirmRomanticAction(this, true)">Sí, mi amor</button>
+                    <button class="romantic-modal-btn cancel" onclick="Utils.confirmRomanticAction(this, false)">No, mejor no</button>
+                </div>
+            </div>
+        `;
+
+        // Agregar al DOM
+        document.body.appendChild(modal);
+
+        // Animar entrada
+        setTimeout(() => {
+            modal.querySelector('.romantic-modal').classList.add('show');
+        }, 100);
+
+        // Guardar callbacks
+        modal.onConfirm = onConfirm;
+        modal.onCancel = onCancel;
+    }
+
+    // Confirmar acción romántica
+    static confirmRomanticAction(button, confirmed) {
+        const modal = button.closest('.romantic-modal-overlay');
+        
+        // Animar salida
+        modal.querySelector('.romantic-modal').classList.remove('show');
+        
+        setTimeout(() => {
+            if (confirmed && modal.onConfirm) {
+                modal.onConfirm();
+            } else if (!confirmed && modal.onCancel) {
+                modal.onCancel();
+            }
+            
+            // Remover modal
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
     }
 
     // Animar elementos al hacer scroll
@@ -450,7 +550,7 @@ class Utils {
         const text = textarea.value.trim();
 
         if (!text) {
-            await this.showSpecialNotification('Por favor, escribe algo antes de enviar 💕');
+            await this.showSpecialNotification('Por favor, escribe algo antes de enviar, mi amorcito 💕', 'warning');
             return;
         }
 
@@ -459,7 +559,7 @@ class Utils {
         if (authManager && !authManager.canWriteInMailbox(mailboxOwner)) {
             const role = authManager.getCurrentUserRole();
             if (role === 'guest') {
-                await this.showSpecialNotification('🔒 Debes iniciar sesión para escribir mensajitos💕');
+                await this.showSpecialNotification('🔒 Debes iniciar sesión para escribir mensajitos, mi vida 💕', 'warning');
             } else {
                 await this.showSpecialNotification(`No puedes escribir en tu propio buzón, pero puedes responder a los mensajes de ${person === 'daniel' ? 'Betzi' : 'Daniel'} 💕`);
             }
@@ -483,7 +583,7 @@ class Utils {
                 document.getElementById(`${person}CharCount`).textContent = '0';
 
                 // Mostrar notificación
-                await this.showSpecialNotification(`¡Mensaje de ${senderName} enviado con amor! 💌`);
+                await this.showSpecialNotification(`¡Mensaje de ${senderName} enviado con amor! 💌`, 'success');
 
                 // Efecto visual
                 visualEffects.createHeartExplosion(
@@ -494,11 +594,11 @@ class Utils {
                 // Animación de envío de carta
                 this.animateLetterSend(textarea);
             } else {
-                await this.showSpecialNotification('Error al enviar el mensaje 💔');
+                await this.showSpecialNotification('Error al enviar el mensaje, mi amorcito 💔', 'error');
             }
         } catch (error) {
             console.error('Error enviando sugerencia:', error);
-            await this.showSpecialNotification('Error al enviar el mensaje 💔');
+            await this.showSpecialNotification('Error al enviar el mensaje, mi vida 💔', 'error');
         }
     }
 
@@ -646,7 +746,7 @@ class Utils {
         const replyText = replyTextarea.value.trim();
 
         if (!replyText) {
-            await this.showSpecialNotification('Por favor, escribe una respuesta 💕');
+            await this.showSpecialNotification('Por favor, escribe una respuesta, mi pinguinita 💕', 'warning');
             return;
         }
 
@@ -756,7 +856,12 @@ class Utils {
         // Solo establecer la fecha actual si el campo está vacío
         const timelineDateInput = document.getElementById('timelineDate');
         if (!timelineDateInput.value) {
-            timelineDateInput.value = new Date().toISOString().split('T')[0];
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+
+            timelineDateInput.value = `${year}-${month}-${day}`;
         }
         
         // Enfocar el primer campo
@@ -792,7 +897,7 @@ class Utils {
         
         // Validar campos requeridos
         if (!formData.date || !formData.title || !formData.description) {
-            await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos 💕');
+            await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos, mi amorcito 💕', 'warning');
             return;
         }
         
@@ -861,6 +966,7 @@ class Utils {
             // Actualizar título del modal y botones
             document.getElementById('timelineModalTitle').textContent = '✏️ Editar Momento';
             document.getElementById('timelineSaveBtn').textContent = '💾 Actualizar Momento';
+            document.getElementById('timelineDeleteBtn').textContent = '💾 Eliminar Momento';
             document.getElementById('timelineDeleteBtn').style.display = 'inline-block';
             
             // Abrir modal
@@ -877,36 +983,39 @@ class Utils {
         const itemId = document.getElementById('timelineItemId').value;
         
         if (!itemId) {
-            await Utils.showSpecialNotification('No se puede eliminar un item nuevo 💔');
+            await Utils.showSpecialNotification('No se puede eliminar un item nuevo, mi amorcito 💔', 'error');
             return;
         }
         
-        if (!confirm('¿Estás seguro de que quieres eliminar este momento? Esta acción no se puede deshacer.')) {
-            return;
-        }
-        
-        try {
-            const success = await dataManager.deleteTimelineItem(itemId);
-            
-            if (success) {
-                // Cerrar modal
-                Utils.closeTimelineModal();
-                
-                // Recargar timeline
-                const data = await dataManager.loadData();
-                if (window.lovePage && typeof window.lovePage.loadTimeline === 'function') {
-                    window.lovePage.loadTimeline(data.timeline);
+        Utils.showRomanticConfirm(
+            'Eliminar momento',
+            '¿Estás segura de querer eliminar este momento, mi amorcito? Esta acción no se puede deshacer',
+            async () => {
+                // Continuar con la eliminación
+                try {
+                    const success = await dataManager.deleteTimelineItem(itemId);
+                    
+                    if (success) {
+                        // Cerrar modal
+                        Utils.closeTimelineModal();
+                        
+                        // Recargar timeline
+                        const data = await dataManager.loadData();
+                        if (window.lovePage && typeof window.lovePage.loadTimeline === 'function') {
+                            window.lovePage.loadTimeline(data.timeline);
+                        }
+                        
+                        // Mostrar notificación
+                        await Utils.showSpecialNotification('¡Momento eliminado, mi amorcito! 💔', 'success');
+                    } else {
+                        await Utils.showSpecialNotification('Error al eliminar el momento, mi vida 💔', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error eliminando timeline item:', error);
+                    await Utils.showSpecialNotification('Error al eliminar el momento, mi amorcito 💔', 'error');
                 }
-                
-                // Mostrar notificación
-                await Utils.showSpecialNotification('¡Momento eliminado! 💔');
-            } else {
-                await Utils.showSpecialNotification('Error al eliminar el momento 💔');
             }
-        } catch (error) {
-            console.error('Error eliminando timeline item:', error);
-            await Utils.showSpecialNotification('Error al eliminar el momento 💔');
-        }
+        );
     }
 
     // Funciones para la galería
@@ -962,103 +1071,115 @@ class Utils {
 
     static async saveGalleryEvent(event) {
         event.preventDefault();
-
-        const title = document.getElementById('galleryTitle').value;
-        const description = document.getElementById('galleryDescription').value;
-        const date = document.getElementById('galleryDate').value;
-        const fileInput = document.getElementById('galleryImageFile');
-        const files = Array.from(fileInput.files); // Cambio: ahora maneja múltiples archivos
-
-        // Validar campos requeridos
-        if (!title || !description || !date) {
-            await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos 💕');
-            return;
-        }
-
-        // Validar archivos, si es que es un registro nuevo
-        if (!Utils.editando && files.length === 0) {
-            await Utils.showSpecialNotification('Por favor, selecciona al menos una imagen 💕');
-            return;
-        }
-
-        let imageUrls = [];
-        
-        // Obtener URLs existentes si estamos editando
-        const existingImages = document.getElementById('galleryExistingImages').value;
-        if (existingImages) {
-            try {
-                imageUrls = JSON.parse(existingImages);
-            } catch (e) {
-                console.error('Error parsing existing images:', e);
-            }
-        }
-
-        // Subir nuevas imágenes
-        if (files.length > 0) {
-            for (const file of files) {
-                try {
-                    // Subir imagen a Supabase Storage
-                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${file.name}`;
-                    const { data, error } = await dataManager.supabase.storage
-                        .from('gallery-images')
-                        .upload(fileName, file);
-
-                    if (error) {
-                        console.error('Error uploading file:', error);
-                        await Utils.showSpecialNotification(`Error al subir ${file.name} 💔`);
-                        continue;
-                    }
-
-                    // Obtener URL pública
-                    const imageUrl = dataManager.supabase.storage
-                        .from('gallery-images')
-                        .getPublicUrl(fileName).data.publicUrl;
-                    
-                    imageUrls.push(imageUrl);
-                } catch (error) {
-                    console.error('Error processing file:', error);
-                    await Utils.showSpecialNotification(`Error al procesar ${file.name} 💔`);
-                }
-            }
-        }
-
-        const formData = {
-            title,
-            description,
-            images: imageUrls, // Cambio: ahora es un array de imágenes
-            date
-        };
-
+    
+        const saveBtn = document.getElementById('gallerySaveBtn');
+        const originalText = saveBtn.innerHTML;
+    
         try {
-            const itemId = document.getElementById('galleryItemId').value;
-            let success;
-
-            if (itemId) {
-                success = await dataManager.updateGalleryPhoto(itemId, formData);
-            } else {
-                success = await dataManager.addGalleryPhoto(formData);
+            // 🔒 Desactivar el botón mientras procesa
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = "⏳ Guardando...";
+    
+            const title = document.getElementById('galleryTitle').value;
+            const description = document.getElementById('galleryDescription').value;
+            const date = document.getElementById('galleryDate').value;
+            const fileInput = document.getElementById('galleryImageFile');
+            const files = Array.from(fileInput.files);
+    
+            // Validar campos requeridos
+            if (!title || !description || !date) {
+                await Utils.showSpecialNotification('Por favor, completa todos los campos requeridos, mi amorcito 💕', 'warning');
+                return;
             }
-
-            if (success) {
-                Utils.closeGalleryModal();
-                Utils.editando = false
-                const data = await dataManager.loadData();
-                window.lovePage.loadGallery(data.gallery);
-                const message = itemId ? '¡Recuerdo actualizado con amor! 💕' : '¡Nuevo recuerdo agregado con amor! 💕';
-                await Utils.showSpecialNotification(message);
-                const modal = document.getElementById('allGalleryModal');
-                if (modal.classList.contains('active')) {
-                    modal.classList.remove('active');
+    
+            // Validar archivos, si es nuevo
+            if (!Utils.editando && files.length === 0) {
+                await Utils.showSpecialNotification('Por favor, selecciona al menos una imagen, mi vida 💕', 'warning');
+                return;
+            }
+    
+            let imageUrls = [];
+    
+            // Obtener imágenes existentes
+            const existingImages = document.getElementById('galleryExistingImages').value;
+            if (existingImages) {
+                try {
+                    imageUrls = JSON.parse(existingImages);
+                } catch (e) {
+                    console.error('Error parsing existing images:', e);
                 }
-                visualEffects.createHeartExplosion(window.innerWidth / 2, window.innerHeight / 2);
-            } else {
+            }
+    
+            // Subir nuevas imágenes
+            if (files.length > 0) {
+                for (const file of files) {
+                    try {
+                        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${file.name}`;
+                        const { data, error } = await dataManager.supabase.storage
+                            .from('gallery-images')
+                            .upload(fileName, file);
+    
+                        if (error) {
+                            console.error('Error uploading file:', error);
+                            await Utils.showSpecialNotification(`Error al subir ${file.name} 💔`);
+                            continue;
+                        }
+    
+                        const imageUrl = dataManager.supabase.storage
+                            .from('gallery-images')
+                            .getPublicUrl(fileName).data.publicUrl;
+    
+                        imageUrls.push(imageUrl);
+                    } catch (error) {
+                        console.error('Error processing file:', error);
+                        await Utils.showSpecialNotification(`Error al procesar ${file.name} 💔`);
+                    }
+                }
+            }
+    
+            const formData = {
+                title,
+                description,
+                images: imageUrls,
+                date
+            };
+    
+            try {
+                const itemId = document.getElementById('galleryItemId').value;
+                let success;
+    
+                if (itemId) {
+                    success = await dataManager.updateGalleryPhoto(itemId, formData);
+                } else {
+                    success = await dataManager.addGalleryPhoto(formData);
+                }
+    
+                if (success) {
+                    Utils.closeGalleryModal();
+                    Utils.editando = false;
+                    const data = await dataManager.loadData();
+                    window.lovePage.loadGallery(data.gallery);
+                    const message = itemId ? '¡Recuerdo actualizado con amor! 💕' : '¡Nuevo recuerdo agregado con amor! 💕';
+                    await Utils.showSpecialNotification(message);
+                    const modal = document.getElementById('allGalleryModal');
+                    if (modal.classList.contains('active')) {
+                        modal.classList.remove('active');
+                    }
+                    visualEffects.createHeartExplosion(window.innerWidth / 2, window.innerHeight / 2);
+                } else {
+                    await Utils.showSpecialNotification('Error al guardar el recuerdo 💔');
+                }
+            } catch (error) {
+                console.error('Error guardando gallery event:', error);
                 await Utils.showSpecialNotification('Error al guardar el recuerdo 💔');
             }
-        } catch (error) {
-            console.error('Error guardando gallery event:', error);
-            await Utils.showSpecialNotification('Error al guardar el recuerdo 💔');
+        } finally {
+            // 🔓 Volver a habilitar el botón
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalText;
         }
     }
+    
 
     // Editar item de la galería
     static async editGalleryItem(itemId) {
@@ -1140,34 +1261,37 @@ class Utils {
         const itemId = document.getElementById('galleryItemId').value;
         
         if (!itemId) {
-            await Utils.showSpecialNotification('No se puede eliminar una foto nueva 💔');
+            await Utils.showSpecialNotification('No se puede eliminar un recuerdo nuevo, mi amorcito 💔', 'error');
             return;
         }
         
-        if (!confirm('¿Estás seguro de que quieres eliminar esta foto? Esta acción no se puede deshacer.')) {
-            return;
-        }
-        
-        try {
-            const success = await dataManager.deleteGalleryPhoto(itemId);
-            
-            if (success) {
-                // Cerrar modal
-                Utils.closeGalleryModal();
-                
-                // Recargar galería
-                const data = await dataManager.loadData();
-                window.lovePage.loadGallery(data.gallery);
-                
-                // Mostrar notificación
-                await Utils.showSpecialNotification('¡Foto eliminada! 💔');
-            } else {
-                await Utils.showSpecialNotification('Error al eliminar la foto 💔');
+        Utils.showRomanticConfirm(
+            'Eliminar recuerdo',
+            '¿Estás segura de querer eliminar este recuerdo, mi vida? Esta acción no se puede deshacer',
+            async () => {
+                // Continuar con la eliminación
+                try {
+                    const success = await dataManager.deleteGalleryPhoto(itemId);
+                    
+                    if (success) {
+                        // Cerrar modal
+                        Utils.closeGalleryModal();
+                        
+                        // Recargar galería
+                        const data = await dataManager.loadData();
+                        window.lovePage.loadGallery(data.gallery);
+                        
+                        // Mostrar notificación
+                        await Utils.showSpecialNotification('¡Recuerdo eliminado, mi amorcito! 💔', 'success');
+                    } else {
+                        await Utils.showSpecialNotification('Error al eliminar el recuerdo, mi vida 💔', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error eliminando gallery item:', error);
+                    await Utils.showSpecialNotification('Error al eliminar el recuerdo, mi amorcito 💔', 'error');
+                }
             }
-        } catch (error) {
-            console.error('Error eliminando gallery item:', error);
-            await Utils.showSpecialNotification('Error al eliminar la foto 💔');
-        }
+        );
     }
 
     static refreshSuggestions() {

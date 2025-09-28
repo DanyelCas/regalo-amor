@@ -210,7 +210,7 @@
     <section class="messages-section">
         <div class="message-container">
             <div class="message" id="randomMessage">
-                Te amo más que ayer, pero menos que mañana, Betzi ❤️🌻
+                Te amo muuuuuuucho, mucho, mucho, mi Betzi ❤️🌻
             </div>
         </div>
     </section>
@@ -240,11 +240,11 @@
                 </div>
                 <div class="mailbox-content">
                     <div class="suggestion-form">
-                        <textarea id="danielSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Betzi... 💕" maxlength="300"></textarea>
-                        <div class="char-counter">
-                            <span id="danielCharCount">0</span>/300
+                        <textarea id="danielSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Daniel... 💕" maxlength="500"></textarea>
+                        <div id="danielSuggestionCount" class="char-counter">
+                            <span id="danielCharCount">0</span>/500
                         </div>
-                        <button class="send-suggestion" onclick="sendSuggestion('daniel')">
+                        <button id="danielButtonSend" class="send-suggestion" onclick="sendSuggestion('daniel')">
                             <span>📤 Enviar</span>
                         </button>
                     </div>
@@ -262,11 +262,11 @@
                 </div>
                 <div class="mailbox-content">
                     <div class="suggestion-form">
-                        <textarea id="betziSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Daniel... 💕" maxlength="300"></textarea>
-                        <div class="char-counter">
-                            <span id="betziCharCount">0</span>/300
+                        <textarea id="betziSuggestion" placeholder="Escribe aquí tu sugerencia, pensamiento o mensaje para Betzi... 💕" maxlength="500"></textarea>
+                        <div id="betziSuggestionCount" class="char-counter">
+                            <span id="betziCharCount">0</span>/500
                         </div>
-                        <button class="send-suggestion" onclick="sendSuggestion('betzi')">
+                        <button id="betziButtonSend" class="send-suggestion" onclick="sendSuggestion('betzi')">
                             <span>📤 Enviar</span>
                         </button>
                     </div>
@@ -394,7 +394,7 @@
                         <button type="submit" class="save-btn" id="timelineSaveBtn">
                             💾 Guardar Momento
                         </button>
-                        <button type="button" class="delete-btn" id="timelineDeleteBtn" style="display: none;" onclick="Utils.deleteTimelineItem()">
+                        <button type="button" class="delete-btn" id="timelineDeleteBtn" style="display: none;" onclick="Utils.deleteTimelineItem()"
                             🗑️ Eliminar
                         </button>
                     </div>
@@ -436,7 +436,7 @@
                     <div class="form-group">
                         <label for="galleryImageFile">🖼️ Imágenes:</label>
                         <input type="file" id="galleryImageFile" accept="image/*" multiple>
-                        <small>Selecciona una o más imágenes para subir (mantén presionado Ctrl/Cmd para seleccionar múltiples)</small>
+                        <small>Selecciona una o más imágenes para subir (mantén presionado Ctrl/Click para seleccionar múltiples)</small>
                     </div>
                     
                     <div class="form-group">
