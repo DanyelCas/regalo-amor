@@ -347,6 +347,13 @@ class AuthUI {
                 betziTextarea.disabled = true;
                 danielTextarea.placeholder = '🔒 Inicia sesión para escribir mensajes de amor 💕';
                 betziTextarea.placeholder = '🔒 Inicia sesión para escribir mensajes de amor 💕';
+
+                danielTextarea.style.display = "none";
+                danielSuggestionCount.style.display = "none";
+                danielButtonSend.style.display = "none";
+                betziTextarea.style.display = "none";
+                betziButtonSend.style.display = "none";
+                betziSuggestionCount.style.display = "none";
                 
                 // Mostrar prompt de login
                 if (loginPrompt) {
