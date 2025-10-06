@@ -561,7 +561,8 @@ class LovePage {
         
         // Actualizar fechas
         const date = new Date(item.date);
-        document.getElementById('fullscreenMemoryDate').textContent = date.toLocaleDateString('es-ES');
+        document.getElementById('fullscreenMemoryDate').textContent =
+        date.toLocaleDateString('es-ES', { timeZone: 'UTC' });
         
         // Actualizar estadísticas
         
